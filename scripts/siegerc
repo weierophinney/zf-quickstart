@@ -1,0 +1,18 @@
+# Copy this file to your $HOME directory as ".siegerc".
+# Edit it to provide a valid path for a logfile.
+# Call using "siege -l <logfile> <url>"
+
+# EDIT THIS VALUE:
+logfile = <some path here>
+
+verbose = off
+show-logfile = off
+logging = true
+protocol = HTTP/1.1
+chunked = true
+connection = close
+failures = 1048576
+concurrent = 10
+time = 60s
+benchmark = true
+spinner = false

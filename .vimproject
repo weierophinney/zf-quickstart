@@ -1,4 +1,4 @@
-quickstart=/home/matthew/tmp/quickstart CD=. filter="*.php *.phtml *.ini *.sql .htaccess" {
+quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sql .htaccess" {
  application=application {
   Bootstrap.php
   configs=configs {
@@ -49,9 +49,10 @@ quickstart=/home/matthew/tmp/quickstart CD=. filter="*.php *.phtml *.ini *.sql .
   .htaccess
  }
  scripts=scripts {
-  data.sqlite.sql
   load.sqlite.php
+  data.sqlite.sql
   schema.sqlite.sql
+  siegerc
  }
  tests=tests filter="*.php *.xml" {
   phpunit.xml
