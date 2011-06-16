@@ -1,0 +1,65 @@
+quickstart=/home/matthew/tmp/quickstart CD=. filter="*.php *.phtml *.ini *.sql .htaccess" {
+ application=application {
+  Bootstrap.php
+  configs=configs {
+   application.ini
+  }
+  controllers=controllers {
+   ErrorController.php
+   GuestbookController.php
+   IndexController.php
+  }
+  forms=forms {
+   Guestbook.php
+  }
+  layouts=layouts {
+   scripts=scripts {
+    layout.phtml
+   }
+  }
+  models=models {
+   Guestbook.php
+   GuestbookMapper.php
+   User.php
+   DbTable=DbTable {
+    Guestbook.php
+   }
+  }
+  views=views {
+   helpers=helpers {
+   }
+   scripts=scripts {
+    error=error {
+     error.phtml
+    }
+    guestbook=guestbook {
+     index.phtml
+     sign.phtml
+    }
+    index=index {
+     index.phtml
+    }
+   }
+  }
+ }
+ library=library {
+ }
+ public=public {
+  index.php
+  .htaccess
+ }
+ scripts=scripts {
+  data.sqlite.sql
+  load.sqlite.php
+  schema.sqlite.sql
+ }
+ tests=tests filter="*.php *.xml" {
+  phpunit.xml
+  application=application {
+   bootstrap.php
+  }
+  library=library {
+   bootstrap.php
+  }
+ }
+}
