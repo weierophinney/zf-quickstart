@@ -1,6 +1,11 @@
 <?php
 
-class GuestbookController extends Zend_Controller_Action
+use Zend\Controller\Action as ActionController,
+    Application\Form\Guestbook as GuestbookForm,
+    Application\Model\Guestbook,
+    Application\Model\GuestbookMapper;
+
+class GuestbookController extends ActionController
 {
 
     public function init()
@@ -10,25 +15,25 @@ class GuestbookController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $guestbook = new Application_Model_GuestbookMapper();
-        $this->view->entries = $guestbook->fetchAll();
+        $guestbook = new GuestbookMapper();
+        $this->view->vars()->entries = $guestbook->fetchAll();
     }
 
     public function signAction()
     {
         $request = $this->getRequest();
-        $form    = new Application_Form_Guestbook();
+        $form    = new GuestbookForm();
 
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($request->getPost())) {
-                $comment = new Application_Model_Guestbook($form->getValues());
-                $mapper  = new Application_Model_GuestbookMapper();
+                $comment = new Guestbook($form->getValues());
+                $mapper  = new GuestbookMapper();
                 $mapper->save($comment);
                 return $this->_helper->redirector('index');
             }
         }
 
-        $this->view->form = $form;
+        $this->view->vars()->form = $form;
     }
 
 

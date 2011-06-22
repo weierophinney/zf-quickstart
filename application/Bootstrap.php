@@ -1,12 +1,14 @@
 <?php
 
-class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
+use Zend\Application\Bootstrap as BaseBootstrap;
+
+class Bootstrap extends BaseBootstrap
 {
     protected function _initDoctype()
     {
         $this->bootstrap('view');
         $view = $this->getResource('view');
-        $view->doctype('XHTML1_STRICT');
+        $view->broker('doctype')->setDoctype('XHTML1_STRICT');
     }
 }
 

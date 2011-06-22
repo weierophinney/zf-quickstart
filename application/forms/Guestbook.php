@@ -1,6 +1,10 @@
 <?php
 
-class Application_Form_Guestbook extends Zend_Form
+namespace Application\Form;
+
+use Zend\Form\Form;
+
+class Guestbook extends Form
 {
 
     public function init()

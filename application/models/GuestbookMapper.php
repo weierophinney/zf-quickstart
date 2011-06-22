@@ -1,6 +1,11 @@
 <?php
 
-class Application_Model_GuestbookMapper
+namespace Application\Model;
+
+use Zend\Db\Table\AbstractTable,
+    Exception;
+
+class GuestbookMapper
 {
     protected $_dbTable;
 
@@ -9,7 +14,7 @@ class Application_Model_GuestbookMapper
         if (is_string($dbTable)) {
             $dbTable = new $dbTable();
         }
-        if (!$dbTable instanceof Zend_Db_Table_Abstract) {
+        if (!$dbTable instanceof AbstractTable) {
             throw new Exception('Invalid table data gateway provided');
         }
         $this->_dbTable = $dbTable;
@@ -19,12 +24,12 @@ class Application_Model_GuestbookMapper
     public function getDbTable()
     {
         if (null === $this->_dbTable) {
-            $this->setDbTable('Application_Model_DbTable_Guestbook');
+            $this->setDbTable('Application\Model\DbTable\Guestbook');
         }
         return $this->_dbTable;
     }
 
-    public function save(Application_Model_Guestbook $guestbook)
+    public function save(Guestbook $guestbook)
     {
         $data = array(
             'email'   => $guestbook->getEmail(),
@@ -40,7 +45,7 @@ class Application_Model_GuestbookMapper
         }
     }
 
-    public function find($id, Application_Model_Guestbook $guestbook)
+    public function find($id, Guestbook $guestbook)
     {
         $result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
@@ -58,7 +63,7 @@ class Application_Model_GuestbookMapper
         $resultSet = $this->getDbTable()->fetchAll();
         $entries   = array();
         foreach ($resultSet as $row) {
-            $entry = new Application_Model_Guestbook();
+            $entry = new Guestbook();
             $entry->setId($row->id)
                   ->setEmail($row->email)
                   ->setComment($row->comment)

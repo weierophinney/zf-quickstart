@@ -1,6 +1,9 @@
 <?php
+namespace Application\Model;
 
-class Application_Model_Guestbook
+use Exception;
+
+class Guestbook
 {
     protected $_comment;
     protected $_created;

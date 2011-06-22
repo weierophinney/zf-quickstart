@@ -1,6 +1,9 @@
 <?php
+namespace Application\Model\DbTable;
 
-class Application_Model_DbTable_Guestbook extends Zend_Db_Table_Abstract
+use Zend\Db\Table\AbstractTable;
+
+class Guestbook extends AbstractTable
 {
     protected $_name = 'guestbook';
 }

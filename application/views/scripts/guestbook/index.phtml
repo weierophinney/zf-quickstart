@@ -1,15 +1,15 @@
-<p><a href="<?php echo $this->url(
+<p><a href="<?php echo $this->broker('url')->direct(
     array(
         'controller' => 'guestbook',
         'action'     => 'sign'
     ),
-    'default',
+    'application',
     true) ?>">Sign Our Guestbook</a></p>
 
 Guestbook Entries: <br />
 <dl>
-    <?php foreach ($this->entries as $entry): ?>
-    <dt><?php echo $this->escape($entry->email) ?></dt>
-    <dd><?php echo $this->escape($entry->comment) ?></dd>
+    <?php foreach ($this->vars('entries') as $entry): ?>
+    <dt><?php echo $this->vars()->escape($entry->email) ?></dt>
+    <dd><?php echo $this->vars()->escape($entry->comment) ?></dd>
     <?php endforeach ?>
 </dl>
