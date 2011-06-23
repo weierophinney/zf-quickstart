@@ -1,0 +1,4 @@
+TODO
+====
+
+* Need to refactor Zend_Captcha in ZF2 to use PluginBroker
