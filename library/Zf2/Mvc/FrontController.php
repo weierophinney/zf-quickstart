@@ -111,7 +111,11 @@ class FrontController implements Dispatchable
             return $response;
         }
 
-        $dispatchable = $this->services->get($controller);
+        if (!($dispatchable = $this->loadController($controller))) {
+            call_user_func($this->notFoundHandler, $request, $response);
+            return $response;
+        }
+
         if (!$dispatchable instanceof Dispatchable) {
             throw new Exception\DomainException(sprintf(
                 'Invalid controller "%s" mapped; does not implement Dispatchable',
@@ -147,5 +151,26 @@ class FrontController implements Dispatchable
     {
         $response->getHeaders()->setStatusCode(404);
         $response->setContent('<h1>Not Found</h1>');
+    }
+
+    protected function loadController($name)
+    {
+        // If not a DI container, just return the return value
+        if (!$this->services instanceof DependencyInjection) {
+            return $this->services->get($name);
+        }
+
+        // Check if we have a class or alias by this name
+        $definition = $this->services->getDefinition();
+        if (!$definition->hasClass($name)) {
+            $manager = $this->services->getInstanceManager();
+            if (!$manager->hasAlias($name)) {
+                // No class or alias found; return false
+                return false;
+            }
+        }
+
+        // Found; retrieve and return it
+        return $this->services->get($name);
     }
 }
