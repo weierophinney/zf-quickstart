@@ -23,9 +23,6 @@ class GuestbookMapper
 
     public function getDbTable()
     {
-        if (null === $this->_dbTable) {
-            $this->setDbTable('Application\Model\DbTable\Guestbook');
-        }
         return $this->_dbTable;
     }
 

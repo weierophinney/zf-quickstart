@@ -188,7 +188,7 @@ return array (
   'Zend\\Db\\Table\\Select' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Db' . DIRECTORY_SEPARATOR . 'Table' . DIRECTORY_SEPARATOR . 'Select.php',
   'Zend\\Db\\Table\\AbstractRowset' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Db' . DIRECTORY_SEPARATOR . 'Table' . DIRECTORY_SEPARATOR . 'AbstractRowset.php',
   'Zend\\Db\\Expr' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Db' . DIRECTORY_SEPARATOR . 'Expr.php',
-  'Zend\\Db\\Statement\\PDO' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Db' . DIRECTORY_SEPARATOR . 'Statement' . DIRECTORY_SEPARATOR . 'Pdo.php',
+  'Zend\\Db\\Statement\\Pdo' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Db' . DIRECTORY_SEPARATOR . 'Statement' . DIRECTORY_SEPARATOR . 'Pdo.php',
   'Zend\\Db\\Statement\\SqlsrvException' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Db' . DIRECTORY_SEPARATOR . 'Statement' . DIRECTORY_SEPARATOR . 'SqlsrvException.php',
   'Zend\\Db\\Statement\\AbstractStatement' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Db' . DIRECTORY_SEPARATOR . 'Statement' . DIRECTORY_SEPARATOR . 'AbstractStatement.php',
   'Zend\\Db\\Statement\\Pdo\\Ibm' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Db' . DIRECTORY_SEPARATOR . 'Statement' . DIRECTORY_SEPARATOR . 'Pdo' . DIRECTORY_SEPARATOR . 'Ibm.php',

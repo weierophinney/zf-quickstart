@@ -31,6 +31,8 @@ class Guestbook extends Form
                 )
         ));
 
+        /*
+         * Captcha is broken in current ZF2 master
         // Add a captcha
         $this->addElement('captcha', 'captcha', array(
             'label'      => 'Please enter the 5 letters displayed below:',
@@ -41,6 +43,7 @@ class Guestbook extends Form
                 'timeout' => 300
             )
         ));
+         */
 
         // Add the submit button
         $this->addElement('submit', 'submit', array(

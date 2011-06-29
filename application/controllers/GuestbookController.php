@@ -1,22 +1,16 @@
 <?php
 
-use Zend\Controller\Action as ActionController,
-    Application\Form\Guestbook as GuestbookForm,
+use Application\Form\Guestbook as GuestbookForm,
     Application\Model\Guestbook,
-    Application\Model\GuestbookMapper;
+    Application\Model\GuestbookMapper,
+    Zf2\Mvc\ActionController,
+    Zf2\Mvc\Router;
 
 class GuestbookController extends ActionController
 {
-
-    public function init()
+    public function index()
     {
-        /* Initialize action controller here */
-    }
-
-    public function indexAction()
-    {
-        $guestbook = new GuestbookMapper();
-        $this->view->vars()->entries = $guestbook->fetchAll();
+        return array('entries' => $this->mapper->fetchAll());
     }
 
     public function signAction()
@@ -27,17 +21,32 @@ class GuestbookController extends ActionController
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($request->getPost())) {
                 $comment = new Guestbook($form->getValues());
-                $mapper  = new GuestbookMapper();
-                $mapper->save($comment);
-                return $this->_helper->redirector('index');
+                $this->mapper->save($comment);
+
+                $redirect = $this->router->assemble(
+                    array('controller' => 'guestbook', 'action' => 'index'), 
+                    array('name' => 'default')
+                );
+
+                $this->response->getHeaders()
+                               ->setStatusCode(302)
+                               ->addHeader('Location', $redirect);
+                return $this->response;
             }
         }
 
-        $this->view->vars()->form = $form;
+        return array('form' => $form);
     }
 
+    public function setMapper(GuestbookMapper $mapper)
+    {
+        $this->mapper = $mapper;
+        return $this;
+    }
 
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
+        return $this;
+    }
 }
-
-
-

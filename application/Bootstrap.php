@@ -38,6 +38,24 @@ class Bootstrap
         $addRoutes->setName('addRoutes')
                   ->addParameter('routes', null);
 
+        $builder->addClass(($db = new Builder\PhpClass));
+        $db->setName($this->config->db->adapter);
+        $db->addInjectionMethod(($dbConstruct = new Builder\InjectionMethod));
+        $dbConstruct->setName('__construct')
+                    ->addParameter('config', null);
+
+        $builder->addClass(($gbTable = new Builder\PhpClass));
+        $gbTable->setName('Application\Model\DbTable\Guestbook');
+        $gbTable->addInjectionMethod(($gbTableConstruct = new Builder\InjectionMethod));
+        $gbTableConstruct->setName('__construct')
+                         ->addParameter('config', 'guestbook-db');
+
+        $builder->addClass(($gbMapper = new Builder\PhpClass));
+        $gbMapper->setName('Application\Model\GuestbookMapper');
+        $gbMapper->addInjectionMethod(($gbMapperTable = new Builder\InjectionMethod));
+        $gbMapperTable->setName('setDbTable')
+                      ->addParameter('dbTable', 'guestbook-table');
+
         // Use both our Builder Definition as well as the default 
         // RuntimeDefinition, builder first
         $definition = new Definition\AggregateDefinition;
