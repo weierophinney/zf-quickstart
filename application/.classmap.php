@@ -1,12 +1,12 @@
 <?php
 return array (
-  'Application\\Model\\GuestbookMapper' => __DIR__ . DIRECTORY_SEPARATOR . 'models/GuestbookMapper.php',
-  'Application\\Model\\DbTable\\Guestbook' => __DIR__ . DIRECTORY_SEPARATOR . 'models/DbTable/Guestbook.php',
-  'Application\\Model\\Guestbook' => __DIR__ . DIRECTORY_SEPARATOR . 'models/Guestbook.php',
-  'Application\\Model\\User' => __DIR__ . DIRECTORY_SEPARATOR . 'models/User.php',
-  'Application_Form_Guestbook' => __DIR__ . DIRECTORY_SEPARATOR . 'forms/Guestbook.php',
-  'IndexController' => __DIR__ . DIRECTORY_SEPARATOR . 'controllers/IndexController.php',
-  'ErrorController' => __DIR__ . DIRECTORY_SEPARATOR . 'controllers/ErrorController.php',
-  'GuestbookController' => __DIR__ . DIRECTORY_SEPARATOR . 'controllers/GuestbookController.php',
+  'Application\\Model\\GuestbookMapper' => __DIR__ . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'GuestbookMapper.php',
+  'Application\\Model\\DbTable\\Guestbook' => __DIR__ . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'DbTable' . DIRECTORY_SEPARATOR . 'Guestbook.php',
+  'Application\\Model\\Guestbook' => __DIR__ . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'Guestbook.php',
+  'Application\\Model\\User' => __DIR__ . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'User.php',
+  'Application\\Form\\Guestbook' => __DIR__ . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR . 'Guestbook.php',
+  'IndexController' => __DIR__ . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'IndexController.php',
+  'ErrorController' => __DIR__ . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'ErrorController.php',
+  'GuestbookController' => __DIR__ . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'GuestbookController.php',
   'Bootstrap' => __DIR__ . DIRECTORY_SEPARATOR . 'Bootstrap.php',
 );

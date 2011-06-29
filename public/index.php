@@ -18,15 +18,24 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 require_once 'Zend/Loader/ClassMapAutoloader.php';
 $loader = new Zend\Loader\ClassMapAutoloader(array(
+    __DIR__ . '/../library/.zf2-classmap.php',
     __DIR__ . '/../library/.classmap.php',
     __DIR__ . '/../application/.classmap.php',
 ));
 $loader->register();
 
+// Configuration
+$config = new Zend\Config\Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
+foreach ($config->phpSettings as $key => $value) {
+    ini_set($key, $value);
+}
+
 // Create application, bootstrap, and run
-$application = new Zend\Application\Application(
-    APPLICATION_ENV,
-    APPLICATION_PATH . '/configs/application.ini'
-);
-$application->bootstrap()
-            ->run();
+$bootstrapClass = $config->bootstrap;
+$bootstrap = new $bootstrapClass($config);
+$bootstrap->execute();
+
+$di      = $bootstrap->getContainer();
+$request = new Zf2\Http\Request();
+$front   = new Zf2\Mvc\FrontController($di);
+$front->dispatch($request)->send();

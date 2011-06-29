@@ -43,6 +43,62 @@ quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sq
   }
  }
  library=library {
+  Zf2=Zf2 {
+   Http=Http {
+    Exception.php
+    Header.php
+    Headers.php
+    HttpHeader.php
+    HttpHeaders.php
+    HttpRequest.php
+    HttpRequestHeaders.php
+    HttpResponse.php
+    HttpResponseHeaders.php
+    Parameters.php
+    Request.php
+    RequestHeaders.php
+    Response.php
+    ResponseHeaders.php
+    Exception=Exception {
+     InvalidArgumentException.php
+     RuntimeException.php
+    }
+   }
+   Mvc=Mvc {
+    ActionController.php
+    Exception.php
+    FrontController.php
+    Route.php
+    RouteStack.php
+    Router.php
+    Exception=Exception {
+     DomainException.php
+     InvalidArgumentException.php
+     InvalidRequestException.php
+     InvalidRouteException.php
+     MissingParameterException.php
+    }
+    Route=Route {
+     RegexRoute.php
+     StaticRoute.php
+    }
+   }
+   Stdlib=Stdlib {
+    Dispatchable.php
+    Exception.php
+    Message.php
+    MessageDescription.php
+    Parameters.php
+    Request.php
+    RequestDescription.php
+    Response.php
+    ResponseDescription.php
+    Exception=Exception {
+     DomainException.php
+     InvalidArgumentException.php
+    }
+   }
+  }
  }
  public=public {
   index.php
