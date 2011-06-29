@@ -13,13 +13,13 @@ class ActionController implements Dispatchable
 
     public function index()
     {
-        return (object) array('content' => 'Placeholder page');
+        return array('content' => 'Placeholder page');
     }
 
     public function notFound()
     {
         $this->response->getHeaders()->setStatusCode(404);
-        return (object) array('content' => 'Page not found');
+        return array('content' => 'Page not found');
     }
 
     public function getRequest()
