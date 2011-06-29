@@ -13,7 +13,7 @@ class GuestbookController extends ActionController
         return array('entries' => $this->mapper->fetchAll());
     }
 
-    public function signAction()
+    public function sign()
     {
         $request = $this->getRequest();
         $form    = new GuestbookForm();

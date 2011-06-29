@@ -51,9 +51,12 @@ class Guestbook extends Form
             'label'    => 'Sign Guestbook',
         ));
 
+        /*
+         * Not currently working on ZF2 master
         // And finally add some CSRF protection
         $this->addElement('hash', 'csrf', array(
             'ignore' => true,
         ));
+         */
     }
 }

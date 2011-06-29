@@ -74,9 +74,12 @@ class Bootstrap
     {
         $events = StaticEventManager::getInstance();
         $events->attach('Zf2\Mvc\FrontController', 'dispatch.post', function($e) {
-            $content = "In event " . $e->getName() . "<br />\n";
+            $content  = "In event " . $e->getName() . "<br />\n";
 
-            $result = $e->getParam('__RESULT__');
+            $metadata = $e->getParam('request')->getMetadata();
+            $content .= "Request metadata: " . var_export($metadata, 1) . "<br />\n";
+
+            $result   = $e->getParam('__RESULT__');
             $content .= var_export($result, 1) . "<br />\n";
             $response = $e->getParam('response');
             $response->setContent($content);
@@ -87,37 +90,5 @@ class Bootstrap
     protected function getDiConfiguration()
     {
         return $this->config->di;
-        /*
-        return array(
-            'instance' => array(
-                'alias' => array(
-                    'events'   => 'Zend\EventManager\EventManager',
-                    'index'    => 'IndexController',
-                    'response' => 'Zf2\Http\Response',
-                    'router'   => 'Zf2\Mvc\Router',
-                ),
-                'preferences' => array(
-                    'Zf2\Stdlib\Parameters' => array('Zf2\Http\Parameters'),
-                ),
-                'properties' => array(
-                    'Zf2\Mvc\Router' => array(
-                        'routes' => array(
-                            array(
-                                'class' => 'Zf2\Mvc\Route\StaticRoute',
-                                'params' => array(
-                                    'path' => '/',
-                                    'params' => array('controller' => 'index', 'action' => 'index'),
-                                ),
-                            ),
-                            array('params' => array(
-                                'regex' => '#^/(?P<controller>[^/]+)(/(<?P<action>[^/]+))?',
-                                'spec'  => '/{controller}/{action}',
-                            )),
-                        ),
-                    ),
-                ),
-            ),
-        );
-         */
     }
 }
