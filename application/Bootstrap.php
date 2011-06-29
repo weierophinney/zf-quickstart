@@ -56,6 +56,18 @@ class Bootstrap
         $gbMapperTable->setName('setDbTable')
                       ->addParameter('dbTable', 'guestbook-table');
 
+        $builder->addClass(($view = new Builder\PhpClass));
+        $view->setName('Zend\View\PhpRenderer');
+        $view->addInjectionMethod(($viewResolver = new Builder\InjectionMethod));
+        $viewResolver->setName('setResolver')
+                     ->addParameter('name', 'Zend\View\TemplatePathStack');
+
+        $builder->addClass(($templatePaths = new Builder\PhpClass));
+        $templatePaths->setName('Zend\View\TemplatePathStack');
+        $templatePaths->addInjectionMethod(($templatePathsAdd = new Builder\InjectionMethod));
+        $templatePathsAdd->setName('setPaths')
+                         ->addParameter('paths', null);
+
         // Use both our Builder Definition as well as the default 
         // RuntimeDefinition, builder first
         $definition = new Definition\AggregateDefinition;
@@ -73,14 +85,9 @@ class Bootstrap
     public function defineEventHandlers()
     {
         $events = StaticEventManager::getInstance();
-        $events->attach('Zf2\Mvc\FrontController', 'dispatch.post', function($e) {
-            $content  = "In event " . $e->getName() . "<br />\n";
-
-            $metadata = $e->getParam('request')->getMetadata();
-            $content .= "Request metadata: " . var_export($metadata, 1) . "<br />\n";
-
-            $result   = $e->getParam('__RESULT__');
-            $content .= var_export($result, 1) . "<br />\n";
+        $view   = $this->di->get('view');
+        $events->attach('Zf2\Mvc\FrontController', 'dispatch.post', function($e) use ($view) {
+            $content  = $view->render($e->getParam('request'), $e->getParam('__RESULT__'));
             $response = $e->getParam('response');
             $response->setContent($content);
             return $response;

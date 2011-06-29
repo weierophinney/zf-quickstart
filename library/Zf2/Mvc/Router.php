@@ -55,7 +55,7 @@ class Router extends ArrayObject implements RouteStack
         if (!$name) {
             $route = $this->getCurrentRoute();
         } elseif (!isset($this[$name])) {
-            throw new Exception(sprintf(
+            throw new Exception\InvalidArgumentException(sprintf(
                 'Cannot locate route by name of "%s"',
                 $name
             ));

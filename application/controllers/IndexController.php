@@ -6,6 +6,6 @@ class IndexController extends ActionController
 {
     public function index()
     {
-        return (object) array('content' => 'IT WORKS!');
+        return array('content' => 'IT WORKS!');
     }
 }

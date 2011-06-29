@@ -4,7 +4,7 @@ use Application\Form\Guestbook as GuestbookForm,
     Application\Model\Guestbook,
     Application\Model\GuestbookMapper,
     Zf2\Mvc\ActionController,
-    Zf2\Mvc\Router;
+    Zf2\Mvc\RouteStack;
 
 class GuestbookController extends ActionController
 {
@@ -19,7 +19,7 @@ class GuestbookController extends ActionController
         $form    = new GuestbookForm();
 
         if ($this->getRequest()->isPost()) {
-            if ($form->isValid($request->getPost())) {
+            if ($form->isValid($request->post()->toArray())) {
                 $comment = new Guestbook($form->getValues());
                 $this->mapper->save($comment);
 
@@ -44,7 +44,7 @@ class GuestbookController extends ActionController
         return $this;
     }
 
-    public function setRouter(Router $router)
+    public function setRouter(RouteStack $router)
     {
         $this->router = $router;
         return $this;

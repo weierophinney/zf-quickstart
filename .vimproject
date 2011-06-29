@@ -1,6 +1,7 @@
 quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sql .htaccess" {
  application=application {
   Bootstrap.php
+  View.php
   configs=configs {
    application.ini
   }
@@ -27,6 +28,7 @@ quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sq
   }
   views=views {
    helpers=helpers {
+    Url.php
    }
    scripts=scripts {
     error=error {

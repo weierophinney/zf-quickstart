@@ -12,13 +12,16 @@
     </div>
     <div id="header-navigation" style="float: right">
         <a href="<?php echo $this->broker('url')->direct(
-            array('controller'=>'guestbook'),
-            'application',
-            true) ?>">Guestbook</a>
+            array('controller'=>'guestbook', 'action' => 'index'),
+            array('name' => 'default')) ?>">Guestbook</a>
     </div>
 </div>
 
-<?php echo $this->broker('layout')->getLayout()->content ?>
+<?php 
+    $vars = $this->vars();
+    // Forcing a container here so we can escape in subviews
+    echo $this->render($vars['content_script'], new \Zend\View\Variables($vars['content']));
+?>
 
 </body>
 </html>
