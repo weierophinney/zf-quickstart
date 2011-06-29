@@ -3,25 +3,33 @@
  * Script for creating and loading database
  */
 
-// Initialize the application path and autoloading
+// Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
+
+// Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
-    APPLICATION_PATH . '/../library',
+    realpath(APPLICATION_PATH . '/../library'),
     get_include_path(),
 )));
-require_once 'Zend/Loader/Autoloader.php';
-Zend_Loader_Autoloader::getInstance();
+
+require_once 'Zend/Loader/ClassMapAutoloader.php';
+$loader = new Zend\Loader\ClassMapAutoloader(array(
+    __DIR__ . '/../library/.zf2-classmap.php',
+    __DIR__ . '/../library/.classmap.php',
+    __DIR__ . '/../application/.classmap.php',
+));
+$loader->register();
 
 // Define some CLI options
-$getopt = new Zend_Console_Getopt(array(
+$getopt = new Zend\Console\Getopt(array(
     'withdata|w' => 'Load database with sample data',
     'env|e-s'    => 'Application environment for which to create database (defaults to development)',
     'help|h'     => 'Help -- usage message',
 ));
 try {
     $getopt->parse();
-} catch (Zend_Console_Getopt_Exception $e) {
+} catch (Zend\Console\Getopt\Exception $e) {
     // Bad options passed: report usage
     echo $e->getUsageMessage();
     return false;
@@ -39,16 +47,13 @@ $env      = $getopt->getOption('e');
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (null === $env) ? 'development' : $env);
 
-// Initialize Zend_Application
-$application = new Zend_Application(
-    APPLICATION_ENV,
-    APPLICATION_PATH . '/configs/application.ini'
-);
+// Configuration and bootstrapping
+$config = new Zend\Config\Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
+$bootstrap = new Bootstrap($config);
+$bootstrap->defineDependencies();
 
 // Initialize and retrieve DB resource
-$bootstrap = $application->getBootstrap();
-$bootstrap->bootstrap('db');
-$dbAdapter = $bootstrap->getResource('db');
+$dbAdapter = $bootstrap->getContainer()->get('guestbook-db');
 
 // let the user know whats going on (we are actually creating a
 // database here)
@@ -60,8 +65,7 @@ if ('testing' != APPLICATION_ENV) {
 }
 
 // Check to see if we have a database file already
-$options = $bootstrap->getOption('resources');
-$dbFile  = $options['db']['params']['dbname'];
+$dbFile  = $config->db->params->dbname;
 if (file_exists($dbFile)) {
     unlink($dbFile);
 }
