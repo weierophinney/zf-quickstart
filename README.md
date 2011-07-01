@@ -15,7 +15,7 @@ Notes
 -----
 
 This branch (features/zf2-prototype-builder) tracks the master branch of the
-Zend Framework 2 repository; at the time of release, it used revision c2863d5;
+Zend Framework 2 repository; at the time of release, it used revision be8c51b;
 if you are using something earlier or later, your results may vary. 
 
 It provides a full version of the ZF2 MVC prototype, which utilizes dependency

@@ -1,4 +1,5 @@
-quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sql .htaccess" {
+quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sql .htaccess *.md" {
+ README.md
  application=application {
   Bootstrap.php
   View.php

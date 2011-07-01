@@ -32,41 +32,30 @@ class Bootstrap
     {
         $builder = new Definition\BuilderDefinition;
 
-        $builder->addClass(($router = new Builder\PhpClass));
-        $router->setName('Zf2\Mvc\Router');
-        $router->addInjectionMethod(($addRoutes = new Builder\InjectionMethod));
-        $addRoutes->setName('addRoutes')
-                  ->addParameter('routes', null);
+        $router = $builder->createClass('Zf2\Mvc\Router');
+        $router->createInjectionMethod('addRoutes')
+               ->addParameter('routes', null);
 
-        $builder->addClass(($db = new Builder\PhpClass));
-        $db->setName($this->config->db->adapter);
-        $db->addInjectionMethod(($dbConstruct = new Builder\InjectionMethod));
-        $dbConstruct->setName('__construct')
-                    ->addParameter('config', null);
+        $db = $builder->createClass($this->config->db->adapter);
+        $db->createInjectionMethod('__construct')
+           ->addParameter('config', null);
 
-        $builder->addClass(($gbTable = new Builder\PhpClass));
-        $gbTable->setName('Application\Model\DbTable\Guestbook');
-        $gbTable->addInjectionMethod(($gbTableConstruct = new Builder\InjectionMethod));
-        $gbTableConstruct->setName('__construct')
-                         ->addParameter('config', 'guestbook-db');
+        $gbTable = $builder->createClass('Application\Model\DbTable\Guestbook');
+        $gbTable->createInjectionMethod('__construct')
+                ->addParameter('config', 'guestbook-db');
 
-        $builder->addClass(($gbMapper = new Builder\PhpClass));
-        $gbMapper->setName('Application\Model\GuestbookMapper');
-        $gbMapper->addInjectionMethod(($gbMapperTable = new Builder\InjectionMethod));
-        $gbMapperTable->setName('setDbTable')
-                      ->addParameter('dbTable', 'guestbook-table');
+        $gbMapper = $builder->createClass('Application\Model\GuestbookMapper');
+        $gbMapper->createInjectionMethod('setDbTable')
+                 ->addParameter('dbTable', 'guestbook-table');
 
-        $builder->addClass(($view = new Builder\PhpClass));
-        $view->setName('Zend\View\PhpRenderer');
-        $view->addInjectionMethod(($viewResolver = new Builder\InjectionMethod));
-        $viewResolver->setName('setResolver')
-                     ->addParameter('name', 'Zend\View\TemplatePathStack');
+        $view = $builder->createClass('Zend\View\PhpRenderer');
+        $view->createInjectionMethod('setResolver')
+             ->addParameter('name', 'Zend\View\TemplatePathStack');
 
-        $builder->addClass(($templatePaths = new Builder\PhpClass));
-        $templatePaths->setName('Zend\View\TemplatePathStack');
-        $templatePaths->addInjectionMethod(($templatePathsAdd = new Builder\InjectionMethod));
-        $templatePathsAdd->setName('setPaths')
-                         ->addParameter('paths', null);
+        $viewPaths = $builder->createClass('Zend\View\TemplatePathStack');
+        $viewPaths->createInjectionMethod('setPaths')
+                  ->addParameter('paths', null);
+
 
         // Use both our Builder Definition as well as the default 
         // RuntimeDefinition, builder first
