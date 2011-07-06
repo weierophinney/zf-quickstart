@@ -40,13 +40,13 @@ class Bootstrap
         $db->createInjectionMethod('__construct')
            ->addParameter('config', null);
 
-        $gbTable = $builder->createClass('Application\Model\DbTable\Guestbook');
+        $gbTable = $builder->createClass('QuickStart\Model\DbTable\Guestbook');
         $gbTable->createInjectionMethod('__construct')
-                ->addParameter('config', 'guestbook-db');
+                ->addParameter('config', $this->config->db->adapter);
 
-        $gbMapper = $builder->createClass('Application\Model\GuestbookMapper');
+        $gbMapper = $builder->createClass('QuickStart\Model\GuestbookMapper');
         $gbMapper->createInjectionMethod('setDbTable')
-                 ->addParameter('dbTable', 'guestbook-table');
+                 ->addParameter('dbTable', 'QuickStart\Model\DbTable\Guestbook');
 
         $view = $builder->createClass('Zend\View\PhpRenderer');
         $view->createInjectionMethod('setResolver')

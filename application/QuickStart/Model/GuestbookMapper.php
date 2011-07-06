@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Model;
+namespace QuickStart\Model;
 
 use Zend\Db\Table\AbstractTable,
     Exception;
@@ -9,7 +9,7 @@ class GuestbookMapper
 {
     protected $_dbTable;
 
-    public function setDbTable($dbTable)
+    public function setDbTable(AbstractTable $dbTable)
     {
         if (is_string($dbTable)) {
             $dbTable = new $dbTable();

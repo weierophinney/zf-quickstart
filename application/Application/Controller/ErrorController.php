@@ -1,5 +1,7 @@
 <?php
 
+namespace Application\Controller;
+
 use Zend\Controller\Action as ActionController,
     Zend\Controller\Plugin\ErrorHandler;
 

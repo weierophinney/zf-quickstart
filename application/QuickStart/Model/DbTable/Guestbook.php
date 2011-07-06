@@ -1,5 +1,5 @@
 <?php
-namespace Application\Model\DbTable;
+namespace QuickStart\Model\DbTable;
 
 use Zend\Db\Table\AbstractTable;
 

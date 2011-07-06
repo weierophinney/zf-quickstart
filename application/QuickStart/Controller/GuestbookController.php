@@ -1,8 +1,10 @@
 <?php
 
-use Application\Form\Guestbook as GuestbookForm,
-    Application\Model\Guestbook,
-    Application\Model\GuestbookMapper,
+namespace QuickStart\Controller;
+
+use QuickStart\Form\Guestbook as GuestbookForm,
+    QuickStart\Model\Guestbook,
+    QuickStart\Model\GuestbookMapper,
     Zf2\Mvc\ActionController,
     Zf2\Mvc\RouteStack;
 

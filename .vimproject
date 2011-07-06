@@ -3,34 +3,39 @@ quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sq
  application=application {
   Bootstrap.php
   View.php
+  Application=Application {
+   Controller=Controller {
+    ErrorController.php
+    IndexController.php
+   }
+   View=View/Helper {
+    Url.php
+   }
+  }
+  QuickStart=QuickStart {
+   Controller=Controller {
+    GuestbookController.php
+   }
+   Form=Form {
+    Guestbook.php
+   }
+   Model=Model {
+    Guestbook.php
+    GuestbookMapper.php
+    DbTable=DbTable {
+     Guestbook.php
+    }
+   }
+  }
   configs=configs {
    application.ini
-  }
-  controllers=controllers {
-   ErrorController.php
-   GuestbookController.php
-   IndexController.php
-  }
-  forms=forms {
-   Guestbook.php
   }
   layouts=layouts {
    scripts=scripts {
     layout.phtml
    }
   }
-  models=models {
-   Guestbook.php
-   GuestbookMapper.php
-   User.php
-   DbTable=DbTable {
-    Guestbook.php
-   }
-  }
   views=views {
-   helpers=helpers {
-    Url.php
-   }
    scripts=scripts {
     error=error {
      error.phtml

@@ -1,5 +1,5 @@
 <?php
-namespace Application\Model;
+namespace QuickStart\Model;
 
 use Exception;
 
