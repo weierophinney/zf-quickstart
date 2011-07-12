@@ -14,6 +14,17 @@ class Router extends ArrayObject implements RouteStack
     protected $events;
     protected $request;
 
+    /**
+     * Constructor
+     *
+     * Overrides parent constructor to prevent pre-initialization.
+     * 
+     * @return void
+     */
+    public function __construct()
+    {
+    }
+
     public function events(EventCollection $events = null)
     {
         if (null !== $events) {

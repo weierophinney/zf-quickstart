@@ -32,10 +32,7 @@ class Bootstrap
     {
         $builder = new Definition\BuilderDefinition;
 
-        $router = $builder->createClass('Zf2\Mvc\Router');
-        $router->createInjectionMethod('addRoutes')
-               ->addParameter('routes', null);
-
+        /*
         $db = $builder->createClass($this->config->db->adapter);
         $db->createInjectionMethod('__construct')
            ->addParameter('config', null);
@@ -43,18 +40,7 @@ class Bootstrap
         $gbTable = $builder->createClass('QuickStart\Model\DbTable\Guestbook');
         $gbTable->createInjectionMethod('__construct')
                 ->addParameter('config', $this->config->db->adapter);
-
-        $gbMapper = $builder->createClass('QuickStart\Model\GuestbookMapper');
-        $gbMapper->createInjectionMethod('setDbTable')
-                 ->addParameter('dbTable', 'QuickStart\Model\DbTable\Guestbook');
-
-        $view = $builder->createClass('Zend\View\PhpRenderer');
-        $view->createInjectionMethod('setResolver')
-             ->addParameter('name', 'Zend\View\TemplatePathStack');
-
-        $viewPaths = $builder->createClass('Zend\View\TemplatePathStack');
-        $viewPaths->createInjectionMethod('setPaths')
-                  ->addParameter('paths', null);
+         */
 
 
         // Use both our Builder Definition as well as the default 

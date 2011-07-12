@@ -614,6 +614,7 @@ return array (
   'Zend\\Di\\Definition\\ArrayDefinition' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'Definition' . DIRECTORY_SEPARATOR . 'ArrayDefinition.php',
   'Zend\\Di\\Definition\\RuntimeDefinition' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'Definition' . DIRECTORY_SEPARATOR . 'RuntimeDefinition.php',
   'Zend\\Di\\Definition\\BuilderDefinition' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'Definition' . DIRECTORY_SEPARATOR . 'BuilderDefinition.php',
+  'Zend\\Di\\Definition\\IntrospectionRuleset' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'Definition' . DIRECTORY_SEPARATOR . 'IntrospectionRuleset.php',
   'Zend\\Di\\Definition\\AggregateDefinition' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'Definition' . DIRECTORY_SEPARATOR . 'AggregateDefinition.php',
   'Zend\\Di\\Definition\\Builder\\InjectionMethod' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'Definition' . DIRECTORY_SEPARATOR . 'Builder' . DIRECTORY_SEPARATOR . 'InjectionMethod.php',
   'Zend\\Di\\Definition\\Builder\\PhpClass' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'Definition' . DIRECTORY_SEPARATOR . 'Builder' . DIRECTORY_SEPARATOR . 'PhpClass.php',
