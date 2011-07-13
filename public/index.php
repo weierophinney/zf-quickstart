@@ -16,13 +16,21 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-require_once 'Zend/Loader/ClassMapAutoloader.php';
-$loader = new Zend\Loader\ClassMapAutoloader(array(
-    __DIR__ . '/../library/.zf2-classmap.php',
-    __DIR__ . '/../library/.classmap.php',
-    __DIR__ . '/../application/.classmap.php',
+require_once 'Zend/Loader/AutoloaderFactory.php';
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\ClassMapAutoloader' => array(
+        __DIR__ . '/../library/.zf2-classmap.php',
+        __DIR__ . '/../library/.classmap.php',
+        __DIR__ . '/../application/.classmap.php',
+    ),
+    'Zend\Loader\StandardAutoloader' => array(
+        'namespaces' => array(
+            'Zf2'         => __DIR__ . '/../library/Zf2',
+            'Application' => __DIR__ . '/../application/Application',
+            'QuickStart'  => __DIR__ . '/../application/QuickStart',
+        ),
+    ),
 ));
-$loader->register();
 
 // Configuration
 $config = new Zend\Config\Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
