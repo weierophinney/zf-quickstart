@@ -16,12 +16,17 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-require_once 'Zend/Loader/ClassMapAutoloader.php';
-$loader = new Zend\Loader\ClassMapAutoloader(array(
-    __DIR__ . '/../library/.classmap.php',
-    __DIR__ . '/../application/.classmap.php',
+require_once 'Zend/Loader/AutoloaderFactory.php';
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\ClassMapAutoloader' => array(
+        __DIR__ . '/../library/.classmap.php',
+        __DIR__ . '/../application/.classmap.php',
+    ),
+    'Zend\Loader\StandardAutoloader' => array(
+        'fallback_autoloader' => true,
+    ),
 ));
-$loader->register();
+
 
 // Create application, bootstrap, and run
 $application = new Zend\Application\Application(
