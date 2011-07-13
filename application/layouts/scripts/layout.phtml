@@ -8,7 +8,8 @@
 <body>
 <div id="header" style="background-color: #EEEEEE; height: 30px;">
     <div id="header-logo" style="float: left">
-        <b>ZF Quickstart Application</b>
+        <a href="<?php echo $this->broker('url')->direct(array(), array('name' => 'home')) ?>">
+            <b>ZF Quickstart Application</b></a>
     </div>
     <div id="header-navigation" style="float: right">
         <a href="<?php echo $this->broker('url')->direct(

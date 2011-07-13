@@ -101,6 +101,7 @@ class RegexRoute implements Route
             }
             $uri = str_replace('{' . $token . '}', urlencode($params[$token]), $uri);
         }
+        $uri = preg_replace('#/index$#', '', $uri);
         return $uri;
     }
 }
