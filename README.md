@@ -14,13 +14,15 @@ The purpose of this repository is several:
 Notes
 -----
 
-This branch (features/zf2-prototype-builder) tracks the master branch of the
-Zend Framework 2 repository; at the time of release, it used revision be8c51b;
-if you are using something earlier or later, your results may vary. 
+This branch (features/zf2-di-runtime) tracks the feature/di branch of Ralph
+Schindler's Zend Framework 2 repository
+(https://github.com/ralphschindler/zf2/tree/feature%2Fdi); at the time of
+release, it uses revision 881a317; if you are using something earlier or later,
+your results may vary. 
 
 It provides a full version of the ZF2 MVC prototype, which utilizes dependency
-injection; this branch uses a combination of the "Builder" and "Runtime"
-strategies in order to create and resolve dependency definitions.
+injection; this branch uses the "Runtime" strategy in order to create and
+resolve dependency definitions.
 
 You should symlink the ZF2 library into "library/Zend/" in order to run the
 quick start.
