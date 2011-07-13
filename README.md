@@ -17,7 +17,7 @@ Notes
 This branch (features/zf2-di-runtime) tracks the feature/di branch of Ralph
 Schindler's Zend Framework 2 repository
 (https://github.com/ralphschindler/zf2/tree/feature%2Fdi); at the time of
-release, it uses revision 4b66143; if you are using something earlier or later,
+release, it uses revision d172f5; if you are using something earlier or later,
 your results may vary. 
 
 It provides a full version of the ZF2 MVC prototype, which utilizes dependency
