@@ -621,7 +621,6 @@ return array (
   'Zend\\Di\\Definition' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'Definition.php',
   'Zend\\Di\\Exception' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'Exception.php',
   'Zend\\Di\\ServiceLocator' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'ServiceLocator.php',
-  'Zend\\Di\\InstanceCollection' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'InstanceCollection.php',
   'Zend\\Di\\DependencyInjector' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'Di' . DIRECTORY_SEPARATOR . 'DependencyInjector.php',
   'Zend\\File\\Exception\\InvalidArgumentException' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'File' . DIRECTORY_SEPARATOR . 'Exception' . DIRECTORY_SEPARATOR . 'InvalidArgumentException.php',
   'Zend\\File\\ClassFileLocator' => __DIR__ . DIRECTORY_SEPARATOR . 'Zend' . DIRECTORY_SEPARATOR . 'File' . DIRECTORY_SEPARATOR . 'ClassFileLocator.php',

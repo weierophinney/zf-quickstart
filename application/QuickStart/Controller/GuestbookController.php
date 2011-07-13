@@ -10,6 +10,8 @@ use QuickStart\Form\Guestbook as GuestbookForm,
 
 class GuestbookController extends ActionController
 {
+    public $mapper;
+
     public function index()
     {
         return array('entries' => $this->mapper->fetchAll());

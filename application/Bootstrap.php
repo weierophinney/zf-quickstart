@@ -30,21 +30,12 @@ class Bootstrap
 
     public function defineDependencies()
     {
+        // Use both our Builder Definition as well as the default 
+        // RuntimeDefinition, builder first.
+        // We're not actually using the builder right now, however; everything 
+        // we need to do can be done via configuration currently.
         $builder = new Definition\BuilderDefinition;
 
-        /*
-        $db = $builder->createClass($this->config->db->adapter);
-        $db->createInjectionMethod('__construct')
-           ->addParameter('config', null);
-
-        $gbTable = $builder->createClass('QuickStart\Model\DbTable\Guestbook');
-        $gbTable->createInjectionMethod('__construct')
-                ->addParameter('config', $this->config->db->adapter);
-         */
-
-
-        // Use both our Builder Definition as well as the default 
-        // RuntimeDefinition, builder first
         $definition = new Definition\AggregateDefinition;
         $definition->addDefinition($builder);
         $definition->addDefinition(new Definition\RuntimeDefinition);
