@@ -1,5 +1,6 @@
 <?php
 return array (
+  'Zf2\\DiDefinition' => __DIR__ . DIRECTORY_SEPARATOR . 'Zf2DiDefinition.php',
   'Zf2\\Http\\HttpResponse' => __DIR__ . DIRECTORY_SEPARATOR . 'Zf2' . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'HttpResponse.php',
   'Zf2\\Http\\HttpHeaders' => __DIR__ . DIRECTORY_SEPARATOR . 'Zf2' . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'HttpHeaders.php',
   'Zf2\\Http\\HttpRequestHeaders' => __DIR__ . DIRECTORY_SEPARATOR . 'Zf2' . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'HttpRequestHeaders.php',

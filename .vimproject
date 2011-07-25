@@ -113,10 +113,10 @@ quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sq
   .htaccess
  }
  scripts=scripts {
+  compileDefinitions.php
   load.sqlite.php
   data.sqlite.sql
   schema.sqlite.sql
-  siegerc
  }
  tests=tests filter="*.php *.xml" {
   phpunit.xml

@@ -1,6 +1,8 @@
 <?php
 
-use Zend\Config\Config,
+use Application\DiDefinition as AppDiDefinition,
+    Zf2\DiDefinition as Zf2DiDefinition,
+    Zend\Config\Config,
     Zend\Di\Configuration,
     Zend\Di\Definition,
     Zend\Di\Definition\Builder,
@@ -30,20 +32,29 @@ class Bootstrap
 
     public function defineDependencies()
     {
-        // Use both our Builder Definition as well as the default 
-        // RuntimeDefinition, builder first.
-        // We're not actually using the builder right now, however; everything 
-        // we need to do can be done via configuration currently.
+        // Use a three-fold strategy:
+        // - Builder (for fine-grained control)
+        // - Compiler (for pre-compiling definitions)
+        // - Runtime (as a catch-all for classes not in either of the above)
+
+        // Builder
         $builder = new Definition\BuilderDefinition;
+
+        // Compiler
+        $application = new AppDiDefinition;
+        $zf2Mvc      = new Zf2DiDefinition;
 
         $definition = new Definition\AggregateDefinition;
         $definition->addDefinition($builder);
+        $definition->addDefinition($application);
+        $definition->addDefinition($zf2Mvc);
         $definition->addDefinition(new Definition\RuntimeDefinition);
         
         // Now make sure the DependencyInjector understands it
         $this->di = new DependencyInjector;
         $this->di->setDefinition($definition);
 
+        // Seed the DI container with configuration
         $config   = new Configuration($this->getDiConfiguration());
         $config->configure($this->di);
     }
