@@ -1,0 +1,62 @@
+zf2-mvc=/home/matthew/git/zf2/modules/Zf2Mvc CD=. filter="*.php *.xml .htaccess *.json" {
+ classmap.php
+ composer.json
+ Information.php
+ docs=docs filter="*.md" {
+  zf2-mvc.examples.md
+ }
+ public=public {
+ }
+ src=src {
+  Zf2Mvc=Zf2Mvc {
+   AppContext.php
+   Application.php
+   Exception.php
+   Controller=Controller {
+    ActionController.php
+    RestfulController.php
+   }
+   Exception=Exception {
+    InvalidArgumentException.php
+    MissingLocatorException.php
+   }
+   Router=Router {
+    Exception.php
+    PriorityList.php
+    Route.php
+    RouteMatch.php
+    RouteStack.php
+    SimpleRouteStack.php
+    Exception=Exception {
+     RuntimeException.php
+    }
+    Http=Http {
+     Literal.php
+     Part.php
+     Regex.php
+     Route.php
+     TreeRouteStack.php
+    }
+   }
+  }
+ }
+ tests=tests CD="." {
+  bootstrap.php
+  phpunit.xml
+  Zf2Mvc=Zf2Mvc {
+   ApplicationTest.php
+   Controller=Controller {
+    ActionControllerTest.php
+    RestfulControllerTest.php
+    TestAsset=TestAsset {
+     RestfulController.php
+     SampleController.php
+    }
+   }
+   TestAsset=TestAsset {
+    Locator.php
+    PathController.php
+   }
+  }
+ }
+}
