@@ -1,11 +1,13 @@
 <?php
 $modules = array(
-    'site' => __DIR__ . '/../modules/site/configs/site.config.php',
+    'site'      => __DIR__ . '/../modules/site/configs/site.config.php',
 );
 
-$applicationConfig = array();
+$applicationConfig = new Zend\Config\Config(array(), true);
 foreach ($modules as $module => $file) {
-    $moduleConfig      = include $file;
-    $applicationConfig = array_merge_recursive($applicationConfig, $moduleConfig);
+    $array             = include $file;
+    $moduleConfig      = new Zend\Config\Config($array);
+    $applicationConfig->merge($moduleConfig);
 }
+
 return $applicationConfig;

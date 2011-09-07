@@ -24,10 +24,9 @@ Zend\Loader\AutoloaderFactory::factory(array(
 
 // Configuration
 $config = include __DIR__ . '/../configs/application.config.php';
-if (array_key_exists(APPLICATION_ENV, $config)) {
-    $config = $config[APPLICATION_ENV];
+if (isset($config->{APPLICATION_ENV})) {
+    $config = $config->{APPLICATION_ENV};
 }
-$config = new Zend\Config\Config($config);
 
 include_once __DIR__ . '/../Bootstrap.php';
 $bootstrap = new Bootstrap($config);
