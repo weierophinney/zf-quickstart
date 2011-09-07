@@ -17,6 +17,7 @@ Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\Loader\ClassMapAutoloader' => array(
         __DIR__ . '/../modules/Zf2Mvc/classmap.php',
         __DIR__ . '/../modules/site/classmap.php',
+        __DIR__ . '/../modules/Guestbook/classmap.php',
     ),
     'Zend\Loader\StandardAutoloader' => array(
     ),

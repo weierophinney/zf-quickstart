@@ -1,0 +1,27 @@
+guestbook=/home/matthew/git/zf-quickstart/modules/Guestbook CD=. filter="*.php *.phtml *.css *.js" {
+ classmap.php
+ composer.json
+ Information.php
+ Controller=Controller {
+  GuestbookController.php
+ }
+ Form=Form {
+  Guestbook.php
+ }
+ Model=Model {
+  Guestbook.php
+  GuestbookMapper.php
+  DbTable=DbTable {
+   Guestbook.php
+  }
+ }
+ configs=configs filter="*.ini" {
+  guestbook.config.php
+ }
+ views=views {
+  guestbook=guestbook {
+   index.phtml
+   sign.phtml
+  }
+ }
+}

@@ -1,6 +1,7 @@
 <?php
 $modules = array(
     'site'      => __DIR__ . '/../modules/site/configs/site.config.php',
+    'guestbook' => __DIR__ . '/../modules/Guestbook/configs/guestbook.config.php',
 );
 
 $applicationConfig = new Zend\Config\Config(array(), true);
