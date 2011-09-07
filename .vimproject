@@ -1,4 +1,5 @@
 quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sql .htaccess *.md" {
+ Bootstrap.php
  README.md
  application=application {
   Bootstrap.php
@@ -49,6 +50,9 @@ quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sq
     }
    }
   }
+ }
+ configs=configs {
+  application.config.php
  }
  library=library {
   Zf2=Zf2 {
@@ -104,6 +108,97 @@ quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sq
     Exception=Exception {
      DomainException.php
      InvalidArgumentException.php
+    }
+   }
+  }
+ }
+ modules=modules filter="*.php *.json *.md *.xml" {
+  Zf2Mvc=Zf2Mvc {
+   Information.php
+   classmap.php
+   composer.json
+   docs=docs {
+    zf2-mvc.examples.md
+   }
+   public=public {
+   }
+   src=src {
+    Zf2Mvc=Zf2Mvc {
+     AppContext.php
+     Application.php
+     Exception.php
+     Controller=Controller {
+      ActionController.php
+      RestfulController.php
+     }
+     Exception=Exception {
+      InvalidArgumentException.php
+      MissingLocatorException.php
+     }
+     Router=Router {
+      Exception.php
+      PriorityList.php
+      Route.php
+      RouteMatch.php
+      RouteStack.php
+      SimpleRouteStack.php
+      Exception=Exception {
+       RuntimeException.php
+      }
+      Http=Http {
+       Literal.php
+       Part.php
+       Regex.php
+       Route.php
+       TreeRouteStack.php
+      }
+     }
+    }
+   }
+   tests=tests {
+    bootstrap.php
+    phpunit.xml
+    Zf2Mvc=Zf2Mvc {
+     ApplicationTest.php
+     Controller=Controller {
+      ActionControllerTest.php
+      RestfulControllerTest.php
+      TestAsset=TestAsset {
+       RestfulController.php
+       SampleController.php
+      }
+     }
+     TestAsset=TestAsset {
+      Locator.php
+      PathController.php
+     }
+    }
+   }
+  }
+  site=site filter="*.php *.phtml" {
+   Information.php
+   classmap.php
+   Controller=Controller {
+    ErrorController.php
+    IndexController.php
+   }
+   View=View {
+    Helper=Helper {
+     Url.php
+    }
+   }
+   configs=configs {
+    site.config.php
+   }
+   views=views {
+    error=error {
+     index.phtml
+    }
+    index=index {
+     index.phtml
+    }
+    layouts=layouts {
+     layout.phtml
     }
    }
   }

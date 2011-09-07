@@ -9,9 +9,15 @@ class ErrorController extends ActionController
     const ERROR_NO_ROUTE = 404;
     const ERROR_NO_CONTROLLER = 404;
 
-    public function errorAction()
+    public function indexAction()
     {
-        $error = $this->request->getMetadata('error');
+        $error = $this->request->getMetadata('error', false);
+        if (!$error) {
+            $error = array(
+                'type'    => 404,
+                'message' => 'Page not found',
+            );
+        }
         
         switch ($error['type']) {
             case self::ERROR_NO_ROUTE:

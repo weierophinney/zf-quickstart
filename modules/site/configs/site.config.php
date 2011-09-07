@@ -39,7 +39,7 @@ $production = array(
             'options' => array(
                 'regex' => '#^/(?P<controller>[^/]+])(/(?P<action>[^/]+))?#',
                 'defaults' => array(
-                    'controller' => 'index',
+                    'controller' => 'error',
                     'action'     => 'index',
                 ),
                 'spec' => '/%s/%s',
