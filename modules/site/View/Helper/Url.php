@@ -19,6 +19,12 @@ class Url extends AbstractHelper
             return '';
         }
 
-        return $this->router->assemble($params, $options);
+        // Remove trailing '/index' from generated URLs.
+        $url = $this->router->assemble($params, $options);
+        if ((6 <= strlen($url)) && '/index' == substr($url, -6)) {
+            $url = substr($url, 0, strlen($url) - 6);
+        }
+
+        return $url;
     }
 }

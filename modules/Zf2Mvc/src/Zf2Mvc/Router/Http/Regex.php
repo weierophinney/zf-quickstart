@@ -136,7 +136,7 @@ class Regex implements Route
     {
         $params  = (array) $params;
         $values  = array_merge($this->matches, $params);
-        $escaped = array_map('urlencode', $params);
+        $escaped = array_map('urlencode', $values);
         return vsprintf($this->spec, array_values($escaped));
     }
 }

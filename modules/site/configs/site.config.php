@@ -11,6 +11,7 @@ $production = array(
             'Zend\View\Renderer' => 'Zend\View\PhpRenderer',
         ),
 
+        /*
         'Zend\View\HelperLoader' => array('methods' => array(
             'registerPlugins' => array(
                 'map' => array(
@@ -23,6 +24,7 @@ $production = array(
                 'loader' => 'Zend\View\HelperLoader',
             ),
         )),
+         */
         'Zend\View\PhpRenderer' => array('methods' => array(
             'setResolver' => array(
                 'resolver' => 'Zend\View\TemplatePathStack',

@@ -68,8 +68,12 @@ class Bootstrap
          */
         $di     = $app->getLocator();
         $view   = $di->get('view');
-        $events = StaticEventManager::getInstance();
+        // Needed until I can figure out why DI isn't working
+        $view->broker()->getClassLoader()->registerPlugin('url', 'site\View\Helper\Url');
+        $url = $view->broker('url');
+        $url->setRouter($app->getRouter());
 
+        $events = StaticEventManager::getInstance();
         $events->attach('Zf2Mvc\Controller\ActionController', 'dispatch.post', function($e) use ($view) {
             $vars       = $e->getParam('__RESULT__');
             if ($vars instanceof Response) {
@@ -83,11 +87,12 @@ class Bootstrap
             $action     = $routeMatch->getParam('action', 'index');
             $script     = $controller . '/' . $action . '.phtml';
             $vars       = new ViewVariables($vars);
+
+            // Action content
             $content    = $view->render($script, $vars);
 
-            $vars       = new ViewVariables(array(
-                'content' => $content,
-            ));
+            // Layout
+            $vars       = new ViewVariables(array('content' => $content));
             $layout     = $view->render('layouts/layout.phtml', $vars);
 
             $response   = $e->getParam('response');

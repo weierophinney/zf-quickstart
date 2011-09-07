@@ -8,7 +8,7 @@
 <body>
 <div id="header" style="background-color: #EEEEEE; height: 30px;">
     <div id="header-logo" style="float: left">
-        <a href="<?php echo $this->broker('url')->direct(array(), array('name' => 'home')) ?>">
+        <a href="<?php echo $this->broker('url')->direct(array('controller' => 'index', 'action' => 'index'), array('name' => 'home')) ?>">
             <b>ZF Quickstart Application</b></a>
     </div>
     <div id="header-navigation" style="float: right">
@@ -19,9 +19,7 @@
 </div>
 
 <?php 
-    $vars = $this->vars();
-    // Forcing a container here so we can escape in subviews
-    echo $this->render($vars['content_script'], new \Zend\View\Variables($vars['content']));
+    echo $this->vars()->getRawValue('content');
 ?>
 
 </body>
