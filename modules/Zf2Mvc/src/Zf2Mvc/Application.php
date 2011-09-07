@@ -2,11 +2,16 @@
 
 namespace Zf2Mvc;
 
-use Zend\EventManager\EventCollection,
+use ArrayObject,
+    Zend\EventManager\EventCollection,
     Zend\EventManager\EventManager,
+    Zend\Http\Header\Cookie,
+    Zend\Http\Request as HttpRequest,
+    Zend\Http\Response as HttpResponse,
     Zend\Stdlib\Dispatchable,
-    Zend\Http\Request,
-    Zend\Http\Response;
+    Zend\Stdlib\Parameters,
+    Zend\Stdlib\RequestDescription as Request,
+    Zend\Stdlib\ResponseDescription as Response;
 
 /**
  * Main application class for invoking applications
@@ -115,7 +120,30 @@ class Application implements AppContext
     public function getRequest()
     {
         if (!$this->request instanceof Request) {
-            $this->setRequest(new Request());
+            $request = new HttpRequest();
+
+            $request->setQuery(new PhpEnvironment\GetContainer())
+                    ->setPost(new PhpEnvironment\PostContainer())
+                    ->setEnv(new Parameters($_ENV))
+                    ->setServer(new Parameters($_SERVER));
+
+            if ($_COOKIE) {
+                $request->headers()->addHeader(new Cookie($_COOKIE));
+            }
+
+            if ($_FILES) {
+                $request->setFile(new Parameters($_FILES));
+            }
+
+            if (isset($_SERVER['REQUEST_METHOD'])) {
+                $request->setMethod($_SERVER['REQUEST_METHOD']);
+            }
+
+            if (isset($_SERVER['REQUEST_URI'])) {
+                $request->setUri($_SERVER['REQUEST_URI']);
+            }
+
+            $this->setRequest($request);
         }
         return $this->request;
     }
@@ -128,7 +156,7 @@ class Application implements AppContext
     public function getResponse()
     {
         if (!$this->response instanceof Response) {
-            $this->setResponse(new Response());
+            $this->setResponse(new HttpResponse());
         }
         return $this->response;
     }
@@ -180,10 +208,12 @@ class Application implements AppContext
         $result     = $this->dispatch($routeMatch);
 
         if ($result instanceof Response) {
-            return $result;
+            $response = $result;
+        } else {
+            $response = $this->getResponse();
         }
-
-        return $this->getResponse();
+        $response = new SendableResponse($response);
+        return $response;
     }
 
     /**
@@ -228,7 +258,12 @@ class Application implements AppContext
     {
         $events  = $this->events();
         $params  = compact('routeMatch');
-        $events->trigger('dispatch.pre', $this, $params);
+        $result  = $events->triggerUntil('dispatch.pre', $this, $params, function($result) {
+            return ($result instanceof Response);
+        });
+        if ($result->stopped()) {
+            return $result->last();
+        }
 
         $controllerName = $routeMatch->getParam('controller', 'not-found');
         $locator        = $this->getLocator();
@@ -247,10 +282,28 @@ class Application implements AppContext
         $request->setMetadata('route-match', $routeMatch);
         $response = $this->getResponse();
 
-        $result   = $controller->dispatch($request, $response);
+        $return   = $controller->dispatch($request, $response);
 
-        $params['result'] =& $result;
-        $events->trigger('dispatch.post', $this, $params);
-        return $result;
+        if (!is_object($return)) {
+            if (static::isAssocArray($return)) {
+                $return = new ArrayObject($return, ArrayObject::ARRAY_AS_PROPS);
+            }
+        }
+
+        $params['__RESULT__'] = $return;
+        $result  = $events->triggerUntil('dispatch.post', $this, $params, function($result) {
+            return ($result instanceof Response);
+        });
+        if ($result->stopped()) {
+            return $result->last();
+        }
+
+        return $params['__RESULT__'];
+    }
+
+    public static function isAssocArray ($arr) 
+    {
+        return (is_array($arr) 
+                && count(array_filter(array_keys($arr),'is_string')) == count($arr));
     }
 }

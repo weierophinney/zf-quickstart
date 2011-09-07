@@ -12,6 +12,7 @@ zf2-mvc=/home/matthew/git/zf2/modules/Zf2Mvc CD=. filter="*.php *.xml .htaccess 
    AppContext.php
    Application.php
    Exception.php
+   SendableResponse.php
    Controller=Controller {
     ActionController.php
     RestfulController.php
@@ -19,6 +20,10 @@ zf2-mvc=/home/matthew/git/zf2/modules/Zf2Mvc CD=. filter="*.php *.xml .htaccess 
    Exception=Exception {
     InvalidArgumentException.php
     MissingLocatorException.php
+   }
+   PhpEnvironment=PhpEnvironment {
+    GetContainer.php
+    PostContainer.php
    }
    Router=Router {
     Exception.php
@@ -28,6 +33,7 @@ zf2-mvc=/home/matthew/git/zf2/modules/Zf2Mvc CD=. filter="*.php *.xml .htaccess 
     RouteStack.php
     SimpleRouteStack.php
     Exception=Exception {
+     InvalidArgumentException.php
      RuntimeException.php
     }
     Http=Http {
@@ -52,6 +58,11 @@ zf2-mvc=/home/matthew/git/zf2/modules/Zf2Mvc CD=. filter="*.php *.xml .htaccess 
      RestfulController.php
      SampleController.php
     }
+   }
+   PhpEnvironment=PhpEnvironment {
+    AbstractContainerTest.php
+    GetContainerTest.php
+    PostContainerTest.php
    }
    TestAsset=TestAsset {
     Locator.php
