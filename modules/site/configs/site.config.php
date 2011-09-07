@@ -11,6 +11,18 @@ $production = array(
             'Zend\View\Renderer' => 'Zend\View\PhpRenderer',
         ),
 
+        'Zend\View\HelperLoader' => array('methods' => array(
+            'registerPlugins' => array(
+                'map' => array(
+                    'url' => 'site\View\Helper\Url',
+                ),
+            ),
+        )),
+        'Zend\View\HelperBroker' => array('methods' => array(
+            'setClassLoader' => array(
+                'loader' => 'Zend\View\HelperLoader',
+            ),
+        )),
         'Zend\View\PhpRenderer' => array('methods' => array(
             'setResolver' => array(
                 'resolver' => 'Zend\View\TemplatePathStack',
@@ -20,6 +32,9 @@ $production = array(
                     ),
                 ),
             ),
+            'setBroker' => array(
+                'broker' => 'Zend\View\HelperBroker',
+            )
         )),
     )),
 

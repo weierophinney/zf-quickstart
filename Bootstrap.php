@@ -7,6 +7,7 @@ use Zend\Config\Config,
     Zend\Di\DependencyInjector,
     Zend\EventManager\StaticEventManager,
     Zend\Stdlib\ResponseDescription as Response,
+    Zend\View\Variables as ViewVariables,
     Zf2Mvc\Application;
 
 class Bootstrap
@@ -74,14 +75,23 @@ class Bootstrap
             if ($vars instanceof Response) {
                 return;
             }
+
             $request    = $e->getParam('request');
             $routeMatch = $request->getMetadata('route-match');
+
             $controller = $routeMatch->getParam('controller', 'error');
             $action     = $routeMatch->getParam('action', 'index');
             $script     = $controller . '/' . $action . '.phtml';
+            $vars       = new ViewVariables($vars);
             $content    = $view->render($script, $vars);
+
+            $vars       = new ViewVariables(array(
+                'content' => $content,
+            ));
+            $layout     = $view->render('layouts/layout.phtml', $vars);
+
             $response   = $e->getParam('response');
-            $response->setContent($content);
+            $response->setContent($layout);
             return $response;
         });
     }
