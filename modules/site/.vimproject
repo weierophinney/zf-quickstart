@@ -1,0 +1,31 @@
+site=/home/matthew/git/zf-quickstart/modules/site CD=. filter="*.php *.phtml *.css *.js" {
+ classmap.php
+ composer.json
+ Information.php
+ Controller=Controller {
+  ErrorController.php
+  IndexController.php
+ }
+ View=View {
+  Helper=Helper {
+   Url.php
+  }
+ }
+ configs=configs filter="*.ini" {
+  site.config.php
+ }
+ layouts=layouts {
+  layout.phtml
+ }
+ views=views {
+  error=error {
+   error.phtml
+  }
+  index=index {
+   index.phtml
+  }
+  layouts=layouts {
+   layout.phtml
+  }
+ }
+}
