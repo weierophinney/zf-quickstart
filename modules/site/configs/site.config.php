@@ -24,6 +24,17 @@ $production = array(
     )),
 
     'routes' => array(
+        'default' => array(
+            'type'    => 'Zf2Mvc\Router\Http\Regex',
+            'options' => array(
+                'regex' => '/(?P<controller>[^/]+)(/(?P<action>[^/]+)?)?',
+                'defaults' => array(
+                    'controller' => 'error',
+                    'action'     => 'index',
+                ),
+                'spec' => '/%s/%s',
+            ),
+        ),
         'home' => array(
             'type' => 'Zf2Mvc\Router\Http\Literal',
             'options' => array(
@@ -34,18 +45,7 @@ $production = array(
                 ),
             ),
         ),
-        'default' => array(
-            'type'    => 'Zf2Mvc\Router\Http\Regex',
-            'options' => array(
-                'regex' => '#^/(?P<controller>[^/]+])(/(?P<action>[^/]+))?#',
-                'defaults' => array(
-                    'controller' => 'error',
-                    'action'     => 'index',
-                ),
-                'spec' => '/%s/%s',
-            ),
-        ),
-    )
+    ),
 );
 
 $staging     = $production;
