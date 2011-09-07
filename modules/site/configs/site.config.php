@@ -25,20 +25,20 @@ $production = array(
 
     'routes' => array(
         'home' => array(
-            'class' => 'Zf2Mvc\Router\Http\Literal',
-            'params' => array(
-                'path' => '/',
-                'params' => array(
+            'type' => 'Zf2Mvc\Router\Http\Literal',
+            'options' => array(
+                'route' => '/',
+                'defaults' => array(
                     'controller' => 'index',
                     'action'     => 'index',
                 ),
             ),
         ),
         'default' => array(
-            'class' => 'Zf2Mvc\Router\Http\Regex',
-            'params' => array(
+            'type'    => 'Zf2Mvc\Router\Http\Regex',
+            'options' => array(
                 'regex' => '#^/(?P<controller>[^/]+])(/(?P<action>[^/]+))?#',
-                'params' => array(
+                'defaults' => array(
                     'controller' => 'index',
                     'action'     => 'index',
                 ),
