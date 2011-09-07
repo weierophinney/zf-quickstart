@@ -104,13 +104,19 @@ class Regex implements Route
         $path = $uri->getPath();
 
         if ($pathOffset !== null) {
-            $result = preg_match('(\G' . $this->regex . ')i', $path, $match, null, $pathOffset);
+            $result = preg_match('#\G' . $this->regex . '#i', $path, $match, null, $pathOffset);
         } else {
-            $result = preg_match('(^' . $this->regex . '$)i', $path, $match);
+            $result = preg_match('#^' . $this->regex . '$#i', $path, $match);
         }
 
-        if ($result === null) {
+        if (!$result) {
             return null;
+        }
+
+        foreach ($match as $key => $value) {
+            if (is_numeric($key) || is_int($key)) {
+                unset($match[$key]);
+            }
         }
 
         $matches       = array_merge($this->defaults, $match);
