@@ -76,6 +76,8 @@ class Bootstrap
         $url->setRouter($app->getRouter());
 
         $events = StaticEventManager::getInstance();
+
+        // View Rendering
         $events->attach('Zf2Mvc\Controller\ActionController', 'dispatch.post', function($e) use ($view) {
             $vars       = $e->getParam('__RESULT__');
             if ($vars instanceof Response) {
@@ -98,6 +100,36 @@ class Bootstrap
             $layout     = $view->render('layouts/layout.phtml', $vars);
 
             $response   = $e->getParam('response');
+            $response->setContent($layout);
+            return $response;
+        });
+
+        // Error handling
+        $app->events()->attach('dispatch.error', function($e) use ($view) {
+            $error   = $e->getParam('error');
+            $app     = $e->getTarget();
+
+            switch ($error) {
+                case Application::ERROR_CONTROLLER_NOT_FOUND:
+                    $vars = array(
+                        'message' => 'Page not found.',
+                    );
+                    break;
+                case Application::ERROR_CONTROLLER_INVALID:
+                default:
+                    $vars = array(
+                        'message' => 'Unable to serve page; invalid controller.',
+                    );
+                    break;
+            }
+
+            $content = $view->render('error/index.phtml', $vars);
+
+            // Layout
+            $vars       = new ViewVariables(array('content' => $content));
+            $layout     = $view->render('layouts/layout.phtml', $vars);
+
+            $response   = $app->getResponse();
             $response->setContent($layout);
             return $response;
         });
