@@ -3,26 +3,37 @@
 namespace Guestbook;
 
 use InvalidArgumentException,
-    RecursiveDirectoryIterator;
+    RecursiveDirectoryIterator,
+    Zend\Loader\AutoloaderFactory,
+    Zend\Config\Config;
 
 class Information
 {
     public function getConfig($env = null)
     {
-        $config = include __DIR__ . '/configs/guestbook.config.php';
+        $config = new Config(include __DIR__ . '/configs/guestbook.config.php');
         if (!$env) {
             return $config;
         }
-        if (array_key_exists($env, $config)) {
-            return $config[$env];
+        if (isset($config->$env) && $config->$env instanceof Config) {
+            return $config->$env;
         }
 
         throw new \InvalidArgumentException('Unrecognized environment provided');
     }
 
-    public function getClassmap()
+    public function init()
     {
-        return include __DIR__ . '/classmap.php';
+        $this->initAutoloader();
+    }
+
+    protected function initAutoloader()
+    {
+        AutoloaderFactory::factory(array(
+            'Zend\Loader\ClassMapAutoloader' => array(
+                __DIR__ . '/classmap.php',
+            )
+        ));
     }
 
     public function getViewScripts()

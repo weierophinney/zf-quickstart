@@ -1,14 +1,12 @@
 <?php
-$modules = array(
-    'site'      => __DIR__ . '/../modules/site/configs/site.config.php',
-    'guestbook' => __DIR__ . '/../modules/Guestbook/configs/guestbook.config.php',
-);
-
-$applicationConfig = new Zend\Config\Config(array(), true);
-foreach ($modules as $module => $file) {
-    $array             = include $file;
-    $moduleConfig      = new Zend\Config\Config($array);
-    $applicationConfig->merge($moduleConfig);
-}
-
-return $applicationConfig;
+return new Zend\Config\Config(array(
+    'modulePaths' => array(
+        realpath(__DIR__ . '/../modules'),
+    ),
+    'modules' => array(
+        'Zf2Module',
+        'Zf2Mvc',
+        'site',
+        'Guestbook',
+    ),
+));

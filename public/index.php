@@ -15,19 +15,18 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once 'Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\Loader\ClassMapAutoloader' => array(
-        __DIR__ . '/../modules/Zf2Mvc/classmap.php',
-        __DIR__ . '/../modules/site/classmap.php',
-        __DIR__ . '/../modules/Guestbook/classmap.php',
+        __DIR__ . '/../modules/Zf2Module/classmap.php',
     ),
     'Zend\Loader\StandardAutoloader' => array(
     ),
 ));
 
 // Configuration
-$config = include __DIR__ . '/../configs/application.config.php';
-if (isset($config->{APPLICATION_ENV})) {
-    $config = $config->{APPLICATION_ENV};
-}
+$appConfig = include __DIR__ . '/../configs/application.config.php';
+$modules = Zf2Module\ModuleCollection::fromConfig($appConfig);
+
+// Get the merged config object
+$config = $modules->getMergedConfig();
 
 include_once __DIR__ . '/../Bootstrap.php';
 $bootstrap = new Bootstrap($config);

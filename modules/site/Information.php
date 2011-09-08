@@ -3,21 +3,37 @@
 namespace site;
 
 use InvalidArgumentException,
-    RecursiveDirectoryIterator;
+    RecursiveDirectoryIterator,
+    Zend\Loader\AutoLoaderFactory,
+    Zend\Config\Config;
 
 class Information
 {
     public function getConfig($env = null)
     {
-        $config = include __DIR__ . '/configs/site.config.php';
+        $config = new Config(include __DIR__ . '/configs/site.config.php');
         if (!$env) {
             return $config;
         }
-        if (array_key_exists($env, $config)) {
-            return $config[$env];
+        if (isset($config->$env) && $config->$env instanceof Config) {
+            return $config->$env;
         }
 
         throw new \InvalidArgumentException('Unrecognized environment provided');
+    }
+
+    public function init()
+    {
+        $this->initAutoloader();
+    }
+
+    protected function initAutoloader()
+    {
+        AutoloaderFactory::factory(array(
+            'Zend\Loader\ClassMapAutoloader' => array(
+                __DIR__ . '/classmap.php',
+            )
+        ));
     }
 
     public function getClassmap()
