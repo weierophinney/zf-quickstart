@@ -75,18 +75,31 @@ class Bootstrap
         $url = $view->broker('url');
         $url->setRouter($app->getRouter());
 
+        $layoutHandler = function($content, $response) use ($view) {
+            // Layout
+            $vars       = new ViewVariables(array('content' => $content));
+            $layout     = $view->render('layouts/layout.phtml', $vars);
+
+            $response->setContent($layout);
+        };
+
         $events = StaticEventManager::getInstance();
 
         // View Rendering
-        $events->attach('Zf2Mvc\Controller\ActionController', 'dispatch.post', function($e) use ($view) {
+        $events->attach('Zf2Mvc\Controller\ActionController', 'dispatch.post', function($e) use ($view, $layoutHandler) {
             $vars       = $e->getParam('__RESULT__');
             if ($vars instanceof Response) {
                 return;
             }
 
+            $response   = $e->getParam('response');
+            if ($response->getStatusCode() == 404) {
+                // Render 404 responses differently
+                return;
+            }
+
             $request    = $e->getParam('request');
             $routeMatch = $request->getMetadata('route-match');
-
             $controller = $routeMatch->getParam('controller', 'error');
             $action     = $routeMatch->getParam('action', 'index');
             $script     = $controller . '/' . $action . '.phtml';
@@ -96,11 +109,29 @@ class Bootstrap
             $content    = $view->render($script, $vars);
 
             // Layout
-            $vars       = new ViewVariables(array('content' => $content));
-            $layout     = $view->render('layouts/layout.phtml', $vars);
+            $layoutHandler($content, $response);
+            return $response;
+        });
+
+        // Render 404 pages
+        $events->attach('Zf2Mvc\Controller\ActionController', 'dispatch.post', function($e) use ($view, $layoutHandler) {
+            $vars       = $e->getParam('__RESULT__');
+            if ($vars instanceof Response) {
+                return;
+            }
 
             $response   = $e->getParam('response');
-            $response->setContent($layout);
+            if ($response->getStatusCode() != 404) {
+                // Only handle 404's
+                return;
+            }
+
+            $vars = array('message' => 'Page not found.');
+
+            $content = $view->render('error/index.phtml', $vars);
+
+            // Layout
+            $layoutHandler($content, $response);
             return $response;
         });
 
@@ -126,11 +157,8 @@ class Bootstrap
             $content = $view->render('error/index.phtml', $vars);
 
             // Layout
-            $vars       = new ViewVariables(array('content' => $content));
-            $layout     = $view->render('layouts/layout.phtml', $vars);
-
-            $response   = $app->getResponse();
-            $response->setContent($layout);
+            $response = $app->getResponse();
+            $layoutHandler($content, $response);
             return $response;
         });
     }
