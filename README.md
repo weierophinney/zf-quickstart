@@ -14,15 +14,19 @@ The purpose of this repository is several:
 Notes
 -----
 
-This branch (features/zf2-di-compiler) tracks the master branch of the ZF2
-repository (https://github.com/zendframework/zf2); at the time of
-release, it uses revision e76d957; if you are using something earlier or later,
+This branch (features/zf2-mvc-module) tracks the prototype/mvc-module branch of
+my own ZF2 repository (https://github.com/weierophinney/zf2); at the time of
+release, it uses revision 0c20e7c; if you are using something earlier or later,
 your results may vary. 
 
-It provides a full version of the ZF2 MVC prototype, which utilizes dependency
-injection; this branch uses a hybrid definition strategy that combines
-"Builder", "Compiler", and "Runtime" in order to create and resolve dependency
-definitions.
+I've imported the Zf2Mvc module from that prototype into this repository. The
+repository also includes "site" and "Guestbook" modules; the former provides the
+home page and error pages, and the latter the actual "Guestbook" functionality
+of the QuickStart.
+
+As the prototype utilizes dependency injection, this is wired into the Bootstrap
+class. It uses the Runtime strategy only at this time; a later revision may
+switch to a compiled strategy for benchmarking purposes.
 
 You should symlink the ZF2 library into "library/Zend/" in order to run the
 quick start.
