@@ -7,7 +7,7 @@ use InvalidArgumentException,
     Zend\Loader\AutoLoaderFactory,
     Zend\Config\Config;
 
-class Information
+class Module
 {
     public function getConfig($env = null)
     {
