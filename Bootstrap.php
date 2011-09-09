@@ -103,7 +103,20 @@ class Bootstrap
             $controller = $routeMatch->getParam('controller', 'error');
             $action     = $routeMatch->getParam('action', 'index');
             $script     = $controller . '/' . $action . '.phtml';
-            $vars       = new ViewVariables($vars);
+
+            if (is_object($vars)) {
+                if ($vars instanceof Traversable) {
+                    $viewVars = new ViewVariables(array());
+                    $vars = iterator_apply($vars, function($it) use ($viewVars) {
+                        $viewVars[$it->key()] = $it->current();
+                    }, $it);
+                    $vars = $viewVars;
+                } else {
+                    $vars = new ViewVariables((array) $vars);
+                }
+            } else {
+                $vars = new ViewVariables($vars);
+            }
 
             // Action content
             $content    = $view->render($script, $vars);
