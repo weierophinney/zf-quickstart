@@ -136,7 +136,7 @@ class Bootstrap
         });
 
         // Error handling
-        $app->events()->attach('dispatch.error', function($e) use ($view) {
+        $app->events()->attach('dispatch.error', function($e) use ($view, $layoutHandler) {
             $error   = $e->getParam('error');
             $app     = $e->getTarget();
 
