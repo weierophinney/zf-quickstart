@@ -28,11 +28,9 @@ class Guestbook extends Form
             'required'   => true,
             'validators' => array(
                 array('validator' => 'StringLength', 'options' => array(0, 20))
-                )
+            )
         ));
 
-        /*
-         * Captcha is broken in current ZF2 master
         // Add a captcha
         $this->addElement('captcha', 'captcha', array(
             'label'      => 'Please enter the 5 letters displayed below:',
@@ -43,7 +41,6 @@ class Guestbook extends Form
                 'timeout' => 300
             )
         ));
-         */
 
         // Add the submit button
         $this->addElement('submit', 'submit', array(
@@ -51,12 +48,9 @@ class Guestbook extends Form
             'label'    => 'Sign Guestbook',
         ));
 
-        /*
-         * Not currently working on ZF2 master
         // And finally add some CSRF protection
         $this->addElement('hash', 'csrf', array(
             'ignore' => true,
         ));
-         */
     }
 }
