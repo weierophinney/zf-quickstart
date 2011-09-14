@@ -70,7 +70,7 @@ class Bootstrap
          */
         $di     = $app->getLocator();
         $view   = $di->get('view');
-        $url    = $view->broker('url');
+        $url    = $view->plugin('url');
         $url->setRouter($app->getRouter());
 
         $layoutHandler = function($content, $response) use ($view) {
