@@ -70,9 +70,7 @@ class Bootstrap
          */
         $di     = $app->getLocator();
         $view   = $di->get('view');
-        // Needed until I can figure out why DI isn't working
-        $view->broker()->getClassLoader()->registerPlugin('url', 'site\View\Helper\Url');
-        $url = $view->broker('url');
+        $url    = $view->broker('url');
         $url->setRouter($app->getRouter());
 
         $layoutHandler = function($content, $response) use ($view) {
