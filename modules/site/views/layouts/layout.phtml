@@ -1,18 +1,18 @@
-<?php echo $this->broker('doctype') ?>
+<?php echo $this->plugin('doctype') ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Zend Framework Quickstart Application</title>
-  <?php echo $this->broker('headLink')->appendStylesheet('/css/global.css') ?>
+  <?php echo $this->plugin('headLink')->appendStylesheet('/css/global.css') ?>
 </head>
 <body>
 <div id="header" style="background-color: #EEEEEE; height: 30px;">
     <div id="header-logo" style="float: left">
-        <a href="<?php echo $this->broker('url')->direct(array('controller' => 'index', 'action' => 'index'), array('name' => 'home')) ?>">
+        <a href="<?php echo $this->plugin('url')->direct(array('controller' => 'index', 'action' => 'index'), array('name' => 'home')) ?>">
             <b>ZF Quickstart Application</b></a>
     </div>
     <div id="header-navigation" style="float: right">
-        <a href="<?php echo $this->broker('url')->direct(
+        <a href="<?php echo $this->plugin('url')->direct(
             array('controller'=>'guestbook', 'action' => 'index'),
             array('name' => 'default')) ?>">Guestbook</a>
     </div>
