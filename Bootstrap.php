@@ -70,9 +70,7 @@ class Bootstrap
          */
         $di     = $app->getLocator();
         $view   = $di->get('view');
-        // Needed until I can figure out why DI isn't working
-        $view->broker()->getClassLoader()->registerPlugin('url', 'site\View\Helper\Url');
-        $url = $view->broker('url');
+        $url    = $view->broker('url');
         $url->setRouter($app->getRouter());
 
         $layoutHandler = function($content, $response) use ($view) {
@@ -103,7 +101,20 @@ class Bootstrap
             $controller = $routeMatch->getParam('controller', 'error');
             $action     = $routeMatch->getParam('action', 'index');
             $script     = $controller . '/' . $action . '.phtml';
-            $vars       = new ViewVariables($vars);
+
+            if (is_object($vars)) {
+                if ($vars instanceof Traversable) {
+                    $viewVars = new ViewVariables(array());
+                    $vars = iterator_apply($vars, function($it) use ($viewVars) {
+                        $viewVars[$it->key()] = $it->current();
+                    }, $it);
+                    $vars = $viewVars;
+                } else {
+                    $vars = new ViewVariables((array) $vars);
+                }
+            } else {
+                $vars = new ViewVariables($vars);
+            }
 
             // Action content
             $content    = $view->render($script, $vars);
