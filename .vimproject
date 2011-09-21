@@ -43,6 +43,9 @@ quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sq
   }
  }
  library=library {
+  Zf1Compat=Zf1Compat {
+   Dispatcher.php
+  }
  }
  public=public {
   index.php
