@@ -4,12 +4,14 @@ namespace Zf2Mvc;
 
 use ArrayObject,
     Zend\Di\Exception\ClassNotFoundException,
+    Zend\Di\Locator,
     Zend\EventManager\EventCollection,
     Zend\EventManager\EventManager,
     Zend\Http\Header\Cookie,
     Zend\Http\Request as HttpRequest,
     Zend\Http\Response as HttpResponse,
     Zend\Stdlib\Dispatchable,
+    Zend\Stdlib\IsAssocArray,
     Zend\Stdlib\Parameters,
     Zend\Stdlib\RequestDescription as Request,
     Zend\Stdlib\ResponseDescription as Response;
@@ -46,24 +48,13 @@ class Application implements AppContext
     }
 
     /**
-     * Set a service locator object
+     * Set a service locator/DI object
      *
-     * Since the DI DependencyInjection and ServiceLocation objects do not 
-     * share a common interface, we will not specify an interface here. That
-     * said, both implement the same "get()" method signature, and this is 
-     * what we will enforce.
-     * 
-     * @param  mixed $locator 
+     * @param  Locator $locator 
      * @return AppContext
      */
-    public function setLocator($locator)
+    public function setLocator(Locator $locator)
     {
-        if (!is_object($locator)) {
-            throw new Exception\InvalidArgumentException('Locator must be an object');
-        }
-        if (!method_exists($locator, 'get')) {
-            throw new Exception\InvalidArgumentException('Locator must implement a "get()" method');
-        }
         $this->locator = $locator;
         return $this;
     }
@@ -109,7 +100,7 @@ class Application implements AppContext
     /**
      * Get the locator object
      * 
-     * @return null|object
+     * @return null|Locator
      */
     public function getLocator()
     {
@@ -189,6 +180,7 @@ class Application implements AppContext
     {
         if (!$this->events instanceof EventCollection) {
             $this->setEventManager(new EventManager(array(__CLASS__, get_class($this))));
+            $this->attachDefaultListeners();
         }
         return $this->events;
     }
@@ -196,8 +188,18 @@ class Application implements AppContext
     /**
      * Run the application
      * 
-     * @events route.pre, route.post, dispatch.pre, dispatch.post, dispatch.error
-     * @return Response
+     * @triggers route(MvcEvent)
+     *           Routes the request, and sets the RouteMatch object in the event.
+     * @triggers dispatch(MvcEvent)
+     *           Dispatches a request, using the discovered RouteMatch and 
+     *           provided request.
+     * @triggers dispatch.error(MvcEvent)
+     *           On errors (controller not found, action not supported, etc.), 
+     *           populates the event with information about the error type, 
+     *           discovered controller, and controller class (if known). 
+     *           Typically, a handler should return a populated Response object
+     *           that can be returned immediately.
+     * @return SendableResponse
      */
     public function run()
     {
@@ -208,14 +210,25 @@ class Application implements AppContext
             );
         }
 
-        $routeMatch = $this->route();
-        $result     = $this->dispatch($routeMatch);
+        $events = $this->events();
+        $event  = new MvcEvent();
+        $event->setTarget($this);
+        $event->setRequest($this->getRequest())
+              ->setRouter($this->getRouter());
 
-        if ($result instanceof Response) {
-            $response = $result;
-        } else {
+        $event->setName('route');
+        $events->trigger($event);
+
+        $event->setName('dispatch');
+        $result = $events->trigger($event, function ($r) {
+            return ($r instanceof Response);
+        });
+
+        $response = $result->last();
+        if (!$response instanceof Response) {
             $response = $this->getResponse();
         }
+
         $response = new SendableResponse($response);
         return $response;
     }
@@ -223,17 +236,13 @@ class Application implements AppContext
     /**
      * Route the request
      * 
-     * @events route.pre, route.post
+     * @param  MvcEvent $e 
      * @return Router\RouteMatch
      */
-    protected function route()
+    public function route(MvcEvent $e)
     {
-        $request = $this->getRequest();
-        $router  = $this->getRouter();
-        $events  = $this->events();
-        $params  = compact('request', 'router');
-
-        $events->trigger('route.pre', $this, $params);
+        $request = $e->getRequest();
+        $router  = $e->getRouter();
 
         $routeMatch = $router->match($request);
 
@@ -246,28 +255,20 @@ class Application implements AppContext
             throw new \Exception('UNIMPLEMENTED: Handling of failed routing');
         }
 
-        $params['__RESULT__'] = $routeMatch;
-        $events->trigger('route.post', $this, $params);
+        $e->setRouteMatch($routeMatch);
         return $routeMatch;
     }
 
     /**
      * Dispatch the matched route
      * 
-     * @events dispatch.pre, dispatch.post, dispatch.error
-     * @param  Router\RouteMatch $routeMatch 
+     * @param  MvcEvent $e 
      * @return mixed
      */
-    protected function dispatch($routeMatch)
+    public function dispatch(MvcEvent $e)
     {
-        $events  = $this->events();
-        $params  = compact('routeMatch');
-        $result  = $events->triggerUntil('dispatch.pre', $this, $params, function($result) {
-            return ($result instanceof Response);
-        });
-        if ($result->stopped()) {
-            return $result->last();
-        }
+        $events     = $this->events();
+        $routeMatch = $e->getRouteMatch();
 
         $controllerName = $routeMatch->getParam('controller', 'not-found');
         $locator        = $this->getLocator();
@@ -275,64 +276,65 @@ class Application implements AppContext
         try {
             $controller = $locator->get($controllerName);
         } catch (ClassNotFoundException $e) {
-            $errorParams = array(
-                'error'       => static::ERROR_CONTROLLER_NOT_FOUND,
-                'controller'  => $controllerName,
-                'route-match' => $routeMatch,
-            );
-            $results = $events->trigger('dispatch.error', $this, $errorParams);
+            $error = clone $e;
+            $error->setError(static::ERROR_CONTROLLER_NOT_FOUND)
+                  ->setController($controllerName)
+                  ->setName('dispatch.error');
+
+            $results = $events->trigger($error);
             if (count($results)) {
                 $return  = $results->last();
             } else {
-                $return = $errorParams;
+                $return = $error->getParams();
             }
             goto complete;
         }
 
         if (!$controller instanceof Dispatchable) {
-            $errorParams = array(
-                'error'            => static::ERROR_CONTROLLER_INVALID,
-                'controller'       => $controllerName,
-                'controller-class' => get_class($controller),
-                'route-match'      => $routeMatch,
-            );
-            $results = $events->trigger('dispatch.error', $this, $errorParams);
+            $error = clone $e;
+            $error->setError(static::ERROR_CONTROLLER_INVALID)
+                  ->setController($controllerName)
+                  ->setControllerClass(get_class($controller))
+                  ->setName('dispatch.error');
+            $results = $events->trigger($error);
             if (count($results)) {
                 $return  = $results->last();
             } else {
-                $return = $errorParams;
+                $return = $error->getParams();
             }
             goto complete;
         }
 
-        $request  = $this->getRequest();
-        $request->setMetadata('route-match', $routeMatch);
-        $response = $this->getResponse();
+        if ($controller instanceof LocatorAware) {
+            $controller->setLocator($locator);
+        }
 
-        $return   = $controller->dispatch($request, $response);
+        $request  = $e->getRequest();
+        $response = $this->getResponse();
+        $event    = clone $e;
+        $return   = $controller->dispatch($request, $response, $e);
 
         complete:
 
         if (!is_object($return)) {
-            if (static::isAssocArray($return)) {
+            if (IsAssocArray::test($return)) {
                 $return = new ArrayObject($return, ArrayObject::ARRAY_AS_PROPS);
             }
         }
-
-        $params['__RESULT__'] = $return;
-        $result  = $events->triggerUntil('dispatch.post', $this, $params, function($result) {
-            return ($result instanceof Response);
-        });
-        if ($result->stopped()) {
-            return $result->last();
-        }
-
-        return $params['__RESULT__'];
+        $e->setResult($return);
+        return $return;
     }
 
-    public static function isAssocArray ($arr) 
+    /**
+     * Attach default listeners for route and dispatch events
+     * 
+     * @param  EventCollection $events 
+     * @return void
+     */
+    protected function attachDefaultListeners()
     {
-        return (is_array($arr) 
-                && count(array_filter(array_keys($arr),'is_string')) == count($arr));
+        $events = $this->events();
+        $events->attach('route', array($this, 'route'));
+        $events->attach('dispatch', array($this, 'dispatch'));
     }
 }

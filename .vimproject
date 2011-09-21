@@ -202,6 +202,35 @@ quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sq
     }
    }
   }
+  Guestbook=Guestbook {
+   Information.php
+   classmap.php
+   composer.json
+   Controller=Controller {
+    GuestbookController.php
+   }
+   Form=Form {
+    Guestbook.php
+   }
+   Model=Model {
+    Guestbook.php
+    GuestbookMapper.php
+    DbTable=DbTable {
+     Guestbook.php
+    }
+   }
+   configs=configs {
+    guestbook.config.php
+   }
+   data=data {
+   }
+   views=views filter="*.phtml" {
+    guestbook=guestbook {
+     index.phtml
+     sign.phtml
+    }
+   }
+  }
  }
  public=public {
   index.php

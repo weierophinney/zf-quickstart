@@ -3,12 +3,14 @@
 namespace Zf2Mvc\Controller;
 
 use Zend\EventManager\EventCollection,
+    Zend\EventManager\EventDescription as Event,
     Zend\EventManager\EventManager,
     Zend\Http\Request as HttpRequest,
     Zend\Http\Response as HttpResponse,
     Zend\Stdlib\Dispatchable,
     Zend\Stdlib\RequestDescription as Request,
-    Zend\Stdlib\ResponseDescription as Response;
+    Zend\Stdlib\ResponseDescription as Response,
+    Zf2Mvc\MvcEvent;
 
 /**
  * Abstract RESTful controller
@@ -80,9 +82,10 @@ abstract class RestfulController implements Dispatchable
      * @events dispatch.pre, dispatch.post
      * @param  Request $request 
      * @param  null|Response $response 
+     * @param  null|Event $event 
      * @return mixed|Response
      */
-    public function dispatch(Request $request, Response $response = null)
+    public function dispatch(Request $request, Response $response = null, Event $e = null)
     {
         if (!$request instanceof HttpRequest) {
             throw new \InvalidArgumentException('Expected an HTTP request');
@@ -93,19 +96,33 @@ abstract class RestfulController implements Dispatchable
         }
         $this->response = $response;
 
+        $routeMatch = false;
+        if ($e instanceof MvcEvent) {
+            $routeMatch = $e->getRouteMatch();
+        } elseif ($e instanceof Event) {
+            $eventParams = $e->getParams();
+            $e = new MvcEvent();
+            $e->setParams($eventParams);
+            unset($eventParams);
+        }
+        if (null === $e) {
+            $e = new MvcEvent();
+        }
+        $e->setRequest($request)
+          ->setResponse($response)
+          ->setTarget($this);
+
         // Emit pre-dispatch signal, passing:
         // - request, response
-        // If a handler returns a response object, return it immediately
+        // If a listener returns a response object, return it immediately
         $events = $this->events();
-        $params = compact('request', 'response');
-        $result = $events->triggerUntil('dispatch.pre', $this, $params, function($result) {
+        $result = $events->triggerUntil('dispatch.pre', $e, function($result) {
             return ($result instanceof Response);
         });
         if ($result->stopped()) {
             return $result->last();
         }
 
-        $routeMatch = $request->getMetadata('route-match', false);
         if (!$routeMatch) {
             /**
              * @todo Determine requirements for when route match is missing.
@@ -125,7 +142,11 @@ abstract class RestfulController implements Dispatchable
             // RESTful methods
             switch (strtolower($request->getMethod())) {
                 case 'get':
-                    if (null !== $id = $request->getMetadata('id')) {
+                    if (null !== $id = $routeMatch->getParam('id')) {
+                        $return = $this->get($id);
+                        break;
+                    }
+                    if (null !== $id = $request->query()->get('id')) {
                         $return = $this->get($id);
                         break;
                     }
@@ -135,16 +156,20 @@ abstract class RestfulController implements Dispatchable
                     $return = $this->create($request->post()->toArray());
                     break;
                 case 'put':
-                    if (null === $id = $request->getMetadata('id')) {
-                        throw new \DomainException('Missing identifier');
+                    if (null === $id = $routeMatch->getParam('id')) {
+                        if (!($id = $request->query()->get('id', false))) {
+                            throw new \DomainException('Missing identifier');
+                        }
                     }
                     $content = $request->getContent();
                     parse_str($content, $parsedParams);
                     $return = $this->update($id, $parsedParams);
                     break;
                 case 'delete':
-                    if (null === $id = $request->getMetadata('id')) {
-                        throw new \DomainException('Missing identifier');
+                    if (null === $id = $routeMatch->getParam('id')) {
+                        if (!($id = $request->query()->get('id', false))) {
+                            throw new \DomainException('Missing identifier');
+                        }
                     }
                     $return = $this->delete($id);
                     break;
@@ -155,16 +180,16 @@ abstract class RestfulController implements Dispatchable
 
         // Emit post-dispatch signal, passing:
         // - return from method, request, response
-        // If a handler returns a response object, return it immediately
-        $params['__RESULT__'] =& $return;
-        $result = $events->triggerUntil(__FUNCTION__ . '.post', $this, $params, function($result) {
+        // If a listener returns a response object, return it immediately
+        $e->setResult($return);
+        $result = $events->triggerUntil(__FUNCTION__ . '.post', $e, function($result) {
             return ($result instanceof Response);
         });
         if ($result->stopped()) {
             return $result->last();
         }
 
-        return $params['__RESULT__'];
+        return $e->getResult();
     }
 
     /**

@@ -2,49 +2,30 @@
 
 namespace Zf2Mvc;
 
-use PHPUnit_Framework_TestCase as TestCase,
+use ArrayObject,
+    PHPUnit_Framework_TestCase as TestCase,
     stdClass,
     Zend\Di\DependencyInjector,
     Zend\Di\ServiceLocator,
+    Zend\EventManager\EventManager,
+    Zend\EventManager\StaticEventManager,
     Zend\Http\Request,
     Zend\Http\Response,
     Zend\Uri\UriFactory;
 
 class ApplicationTest extends TestCase
 {
+    public function setUp()
+    {
+        StaticEventManager::resetInstance();
+    }
+
     public function testEventManagerIsLazyLoaded()
     {
         $app = new Application();
         $events = $app->events();
         $this->assertInstanceOf('Zend\EventManager\EventCollection', $events);
         $this->assertInstanceOf('Zend\EventManager\EventManager', $events);
-    }
-
-    public static function invalidLocators()
-    {
-        return array(
-            array(null),
-            array(0),
-            array(1),
-            array(1.0),
-            array(''),
-            array('bad'),
-            array(array()),
-            array(array('foo')),
-            array(array('foo' => 'bar')),
-            array(new stdClass),
-        );
-    }
-
-    /**
-     * @dataProvider invalidLocators
-     */
-    public function testLocatorMutatorShouldRaiseExceptionOnInvalidInput($locator)
-    {
-        $app = new Application();
-
-        $this->setExpectedException('InvalidArgumentException');
-        $app->setLocator($locator);
     }
 
     public function testLocatorIsNullByDefault()
@@ -186,8 +167,8 @@ class ApplicationTest extends TestCase
         $app = $this->setupPathController();
 
         $log = array();
-        $app->events()->attach('route.post', function($e) use (&$log) {
-            $match = $e->getParam('__RESULT__', false);
+        $app->events()->attach('route', function($e) use (&$log) {
+            $match = $e->getRouteMatch();
             if (!$match) {
                 return;
             }
@@ -322,15 +303,15 @@ class ApplicationTest extends TestCase
     {
         $app = $this->setupActionController();
 
-        $app->events()->attach('dispatch.post', function($e) {
-            $result = $e->getParam('__RESULT__', false);
+        $app->events()->attach('dispatch', function($e) {
+            $result = $e->getResult();
             if (!$result) {
                 return;
             }
             $result['foo'] = 'bar';
         });
-        $app->events()->attach('dispatch.post', function($e) {
-            $result = $e->getParam('__RESULT__', false);
+        $app->events()->attach('dispatch', function($e) {
+            $result = $e->getResult();
             if (!$result) {
                 return;
             }
@@ -344,5 +325,69 @@ class ApplicationTest extends TestCase
         $response = json_decode($response->getContent());
         $this->assertTrue(isset($response->foo), var_export($response, 1));
         $this->assertEquals('bar', $response->foo);
+    }
+
+    public function testDispatchingInjectsLocatorInLocatorAwareControllers()
+    {
+        $app = new Application();
+
+        $request = new Request();
+        $uri     = UriFactory::factory('http://example.local/locator-aware');
+        $request->setUri($uri);
+        $app->setRequest($request);
+
+        $route = new Router\Http\Literal(array(
+            'route'    => '/locator-aware',
+            'defaults' => array(
+                'controller' => 'locator-aware',
+            ),
+        ));
+        $router  = $app->getRouter();
+        $router->addRoute('locator-aware', $route);
+
+        $locator = new TestAsset\Locator();
+        $locator->add('locator-aware', function() {
+            return new TestAsset\LocatorAwareController;
+        });
+        $app->setLocator($locator);
+
+        $storage = new ArrayObject();
+        $events  = StaticEventManager::getInstance();
+        $events->attach('Zf2Mvc\TestAsset\LocatorAwareController', 'dispatch.pre', function ($e) use ($storage) {
+            $controller = $e->getTarget();
+            $storage['locator'] = $controller->getLocator();
+            return $e->getResponse();
+        }, 100);
+
+        $app->run();
+
+        $this->assertTrue(isset($storage['locator']));
+        $this->assertSame($locator, $storage['locator']);
+    }
+
+    public function testCanProvideAlternateEventManagerToDisableDefaultRouteAndDispatchEventListeners()
+    {
+        $app    = $this->setupActionController();
+        $events = new EventManager();
+        $app->setEventManager($events);
+
+        $listener = function($e) {
+            $name     = $e->getName();
+            $target   = $e->getTarget();
+            $response = $e->getResponse();
+            $content  = $response->getContent();
+            $content  = (empty($content) ? $name : $content . '::' . $name);
+            $response->setContent($content);
+        };
+        $events = StaticEventManager::getInstance();
+        $events->attach('Zf2Mvc\Controller\TestAsset\SampleController', 'dispatch.pre', $listener);
+        $events->attach('Zf2Mvc\Controller\TestAsset\SampleController', 'dispatch.post', $listener);
+
+        $app->run();
+        $response = $app->getResponse();
+        $content  = $response->getContent();
+
+        $this->assertNotContains('dispatch.pre', $content);
+        $this->assertNotContains('dispatch.post', $content);
     }
 }

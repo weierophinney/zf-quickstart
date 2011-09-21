@@ -84,20 +84,20 @@ class Bootstrap
         $events = StaticEventManager::getInstance();
 
         // View Rendering
-        $events->attach('Zf2Mvc\Controller\ActionController', 'dispatch.post', function($e) use ($view, $layoutHandler) {
-            $vars       = $e->getParam('__RESULT__');
+        $events->attach('Zf2Mvc\Controller\ActionController', 'dispatch', function($e) use ($view, $layoutHandler) {
+            $vars       = $e->getResult();
             if ($vars instanceof Response) {
                 return;
             }
 
-            $response   = $e->getParam('response');
+            $response   = $e->getResponse();
             if ($response->getStatusCode() == 404) {
                 // Render 404 responses differently
                 return;
             }
 
-            $request    = $e->getParam('request');
-            $routeMatch = $request->getMetadata('route-match');
+            $request    = $e->getRequest();
+            $routeMatch = $e->getRouteMatch();
             $controller = $routeMatch->getParam('controller', 'error');
             $action     = $routeMatch->getParam('action', 'index');
             $script     = $controller . '/' . $action . '.phtml';
@@ -105,9 +105,10 @@ class Bootstrap
             if (is_object($vars)) {
                 if ($vars instanceof Traversable) {
                     $viewVars = new ViewVariables(array());
+                    $iterator = ($vars instanceof \IteratorAggregate) ? $vars->getIterator() : $vars;
                     $vars = iterator_apply($vars, function($it) use ($viewVars) {
                         $viewVars[$it->key()] = $it->current();
-                    }, $it);
+                    }, array($iterator));
                     $vars = $viewVars;
                 } else {
                     $vars = new ViewVariables((array) $vars);
@@ -122,16 +123,16 @@ class Bootstrap
             // Layout
             $layoutHandler($content, $response);
             return $response;
-        });
+        }, -10); // post filter
 
         // Render 404 pages
-        $events->attach('Zf2Mvc\Controller\ActionController', 'dispatch.post', function($e) use ($view, $layoutHandler) {
-            $vars       = $e->getParam('__RESULT__');
+        $events->attach('Zf2Mvc\Controller\ActionController', 'dispatch', function($e) use ($view, $layoutHandler) {
+            $vars       = $e->getResult();
             if ($vars instanceof Response) {
                 return;
             }
 
-            $response   = $e->getParam('response');
+            $response   = $e->getResponse();
             if ($response->getStatusCode() != 404) {
                 // Only handle 404's
                 return;
@@ -144,11 +145,11 @@ class Bootstrap
             // Layout
             $layoutHandler($content, $response);
             return $response;
-        });
+        }, 10); // post filter
 
         // Error handling
         $app->events()->attach('dispatch.error', function($e) use ($view, $layoutHandler) {
-            $error   = $e->getParam('error');
+            $error   = $e->getError();
             $app     = $e->getTarget();
 
             switch ($error) {

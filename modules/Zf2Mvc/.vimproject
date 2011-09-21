@@ -12,6 +12,8 @@ zf2-mvc=/home/matthew/git/zf2/modules/Zf2Mvc CD=. filter="*.php *.xml .htaccess 
    AppContext.php
    Application.php
    Exception.php
+   LocatorAware.php
+   MvcEvent.php
    SendableResponse.php
    Controller=Controller {
     ActionController.php
@@ -40,7 +42,6 @@ zf2-mvc=/home/matthew/git/zf2/modules/Zf2Mvc CD=. filter="*.php *.xml .htaccess 
      Literal.php
      Part.php
      Regex.php
-     Route.php
      TreeRouteStack.php
     }
    }
@@ -67,6 +68,7 @@ zf2-mvc=/home/matthew/git/zf2/modules/Zf2Mvc CD=. filter="*.php *.xml .htaccess 
    TestAsset=TestAsset {
     Locator.php
     PathController.php
+    LocatorAwareController.php
    }
   }
  }

@@ -39,7 +39,7 @@ $production = array(
                     'controller' => 'error',
                     'action'     => 'index',
                 ),
-                'spec' => '/%s/%s',
+                'spec' => '/%controller%/%action%',
             ),
         ),
         'home' => array(
