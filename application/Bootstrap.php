@@ -8,7 +8,7 @@ class Bootstrap extends BaseBootstrap
     {
         $this->bootstrap('view');
         $view = $this->getResource('view');
-        $view->broker('doctype')->setDoctype('XHTML1_STRICT');
+        $view->plugin('doctype')->setDoctype('XHTML1_STRICT');
     }
 }
 
