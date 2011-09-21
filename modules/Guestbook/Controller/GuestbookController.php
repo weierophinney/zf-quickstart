@@ -5,8 +5,8 @@ namespace Guestbook\Controller;
 use Guestbook\Form\Guestbook as GuestbookForm,
     Guestbook\Model\Guestbook,
     Guestbook\Model\GuestbookMapper,
-    Zf2Mvc\Controller\ActionController,
-    Zf2Mvc\Router\RouteStack;
+    Zend\Mvc\Controller\ActionController,
+    Zend\Mvc\Router\RouteStack;
 
 class GuestbookController extends ActionController
 {

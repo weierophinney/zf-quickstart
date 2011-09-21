@@ -1,14 +1,16 @@
 zf2-mvc=/home/matthew/git/zf2/modules/Zf2Mvc CD=. filter="*.php *.xml .htaccess *.json" {
- classmap.php
+ Module.php
+ autoload_classmap.php
+ autoload_function.php
+ autoload_register.php
  composer.json
- Information.php
  docs=docs filter="*.md" {
   zf2-mvc.examples.md
  }
  public=public {
  }
  src=src {
-  Zf2Mvc=Zf2Mvc {
+  Zf2Mvc=Zend/Mvc {
    AppContext.php
    Application.php
    Exception.php
@@ -50,13 +52,13 @@ zf2-mvc=/home/matthew/git/zf2/modules/Zf2Mvc CD=. filter="*.php *.xml .htaccess 
  tests=tests CD="." {
   bootstrap.php
   phpunit.xml
-  Zf2Mvc=Zf2Mvc {
+  Zf2Mvc=Zend/Mvc {
    ApplicationTest.php
    Controller=Controller {
     ActionControllerTest.php
     RestfulControllerTest.php
     TestAsset=TestAsset {
-     RestfulController.php
+     RestfulTestController.php
      SampleController.php
     }
    }

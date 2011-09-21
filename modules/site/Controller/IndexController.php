@@ -2,7 +2,7 @@
 
 namespace site\Controller;
 
-use Zf2Mvc\Controller\ActionController;
+use Zend\Mvc\Controller\ActionController;
 
 class IndexController extends ActionController
 {

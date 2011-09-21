@@ -15,24 +15,28 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once 'Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\Loader\ClassMapAutoloader' => array(
-        __DIR__ . '/../modules/Zf2Mvc/classmap.php',
-        __DIR__ . '/../modules/site/classmap.php',
-        __DIR__ . '/../modules/Guestbook/classmap.php',
+        __DIR__ . '/../modules/Zf2Module/classmap.php',
     ),
-    'Zend\Loader\StandardAutoloader' => array(
-    ),
+    'Zend\Loader\StandardAutoloader' => array(),
 ));
 
 // Configuration
-$config = include __DIR__ . '/../configs/application.config.php';
-if (isset($config->{APPLICATION_ENV})) {
-    $config = $config->{APPLICATION_ENV};
-}
+$appConfig = include __DIR__ . '/../configs/application.config.php';
 
-include_once __DIR__ . '/../Bootstrap.php';
-$bootstrap = new Bootstrap($config);
+$moduleLoader = new Zend\Loader\ModuleAutoloader($appConfig->module_paths);
+$moduleLoader->register();
 
-$application = new Zf2Mvc\Application;
+$moduleManager = new Zend\Module\Manager(
+    $appConfig->modules,
+    new Zend\Module\ManagerOptions($appConfig->module_config)
+);
+
+// Get the merged config object
+$config = $moduleManager->getMergedConfig();
+
+// Create application, bootstrap, and run
+$bootstrap   = new $config->bootstrap_class($config);
+$application = new Zend\Mvc\Application;
 $bootstrap->bootstrap($application);
 
 $application->run()->send();
