@@ -5,4 +5,5 @@ $this->vars('form')->setAction($this->plugin('url')->direct(
     array('controller' => 'guestbook', 'action' => 'sign'),
     array('name' => 'default')
 ));
-echo $this->vars('form');
+$form = $this->vars('form');
+echo $form->render($this);

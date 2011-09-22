@@ -32,7 +32,8 @@ class Dispatcher
     {
         $routeMatch = $e->getRouteMatch();
         $controller = $routeMatch->getParam('controller', 'index');
-        $class      = static::normalizeName($controller);
+        $baseClass  = static::normalizeName($controller) . 'Controller';
+        $class      = $baseClass;
         $module     = $routeMatch->getParam('module', '__DEFAULT__');
 
         if (($module == '__DEFAULT__')) {
@@ -60,7 +61,7 @@ class Dispatcher
         }
 
         $found = false;
-        $file  = static::normalizeName($controller) . '.php';
+        $file  = static::normalizeName($baseClass) . '.php';
         $file  = str_replace(array('\\', '_'), DIRECTORY_SEPARATOR, $file);
         foreach ((array) $this->paths[$module] as $path) {
             $filename = $path . DIRECTORY_SEPARATOR . $file;
@@ -92,12 +93,11 @@ class Dispatcher
         return $dispatchable->dispatch($e->getRequest(), $e->getResponse(), $e);
     }
 
-    public static function normalizeName($controller)
+    public static function normalizeName($string)
     {
-        $class  = str_replace(array('-', '.'), ' ', $controller);
-        $class  = ucwords($class);
-        $class  = str_replace(' ', '', $class);
-        $class .= 'Controller';
-        return $class;
+        $name  = str_replace(array('-', '.'), ' ', $string);
+        $name  = ucwords($name);
+        $name  = str_replace(' ', '', $name);
+        return $name;
     }
 }

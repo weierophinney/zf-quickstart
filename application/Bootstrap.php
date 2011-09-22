@@ -3,6 +3,8 @@
 namespace Application;
 
 use Zend\Config\Config,
+    Zend\Db\Db,
+    Zend\Db\Table\AbstractTable as DbTable,
     Zend\EventManager\EventManager,
     Zend\Loader\ResourceAutoloader,
     Zend\Mvc\Application,
@@ -10,7 +12,7 @@ use Zend\Config\Config,
     Zend\View\PhpRenderer as View,
     Zf1Compat\Dispatcher;
 
-class Bootstrap extends BaseBootstrap
+class Bootstrap
 {
     protected $config;
     protected $events;
@@ -29,16 +31,34 @@ class Bootstrap extends BaseBootstrap
         $this->initializeAutoloader($app);
         $this->initializeRouter($app);
         $this->initializeDispatcher($app);
-        // TODO:
-        // View layer and error handling
+        $this->initializeDb($app);
+        $this->initializeView($app);
     }
 
     public function initializeAutoloader()
     {
-        $path       = $this->config->resources->frontController->controllerDirectory;
-        $autoloader = new ResourceAutoloader();
-        $autoloader->setNamespace('Application')
-                   ->setBasePath($path);
+        $autoloader = new ResourceAutoloader(array(
+            'namespace' => 'Application',
+            'basePath'  => APPLICATION_PATH,
+        ));
+        $autoloader->addResourceTypes(array(
+            'model' => array(
+                'path'      => 'models',
+                'namespace' => 'Model',
+            ),
+            'dbtable' => array(
+                'path'      => 'models/DbTable',
+                'namespace' => 'Model\DbTable',
+            ),
+            'form' => array(
+                'path'      => 'forms',
+                'namespace' => 'Form',
+            ),
+            'view_helpers' => array(
+                'path'      => 'views/helpers',
+                'namespace' => 'View\Helper',
+            ),
+        ));
         $autoloader->register();
     }
 
@@ -68,6 +88,12 @@ class Bootstrap extends BaseBootstrap
         $view = $this->getView($app);
         $viewListener = new ViewListener($view);
         $this->events->attachAggregate($viewListener);
+    }
+
+    public function initializeDb($app)
+    {
+        $db = Db::factory($this->config->resources->db);
+        DbTable::setDefaultAdapter($db);
     }
 
     protected function getView($app)

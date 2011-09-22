@@ -18,20 +18,18 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 require_once 'Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
-    'Zend\Loader\ClassMapAutoloader' => array(
-        __DIR__ . '/../library/.classmap.php',
-        __DIR__ . '/../application/.classmap.php',
-    ),
     'Zend\Loader\StandardAutoloader' => array(
-        'fallback_autoloader' => true,
+        'namespaces' => array(
+            'Application' => APPLICATION_PATH,
+            'Zf1Compat'   => APPLICATION_PATH . '/../library/Zf1Compat',
+        ),
     ),
 ));
+require __DIR__ . '/../modules/Zf2Mvc/autoload_register.php';
 
+$config      = new Zend\Config\Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
+$bootstrap   = new Application\Bootstrap($config);
+$application = new Zend\Mvc\Application;
+$bootstrap->bootstrap($application);
 
-// Create application, bootstrap, and run
-$application = new Zend\Application\Application(
-    APPLICATION_ENV,
-    APPLICATION_PATH . '/configs/application.ini'
-);
-$application->bootstrap()
-            ->run();
+$application->run()->send();
