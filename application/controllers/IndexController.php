@@ -1,20 +1,13 @@
 <?php
 
-use Zend\Controller\Action as ActionController;
+namespace Application;
+
+use Zend\Mvc\Controller\ActionController;
 
 class IndexController extends ActionController
 {
-
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
-
     public function indexAction()
     {
-        // action body
+        return array();
     }
-
-
 }
-

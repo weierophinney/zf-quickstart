@@ -1,6 +1,8 @@
 <?php
 
-use Zend\Controller\Action as ActionController,
+namespace Application;
+
+use Zend\Mvc\Controller\ActionController,
     Zend\Controller\Plugin\ErrorHandler;
 
 class ErrorController extends ActionController

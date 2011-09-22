@@ -1,5 +1,7 @@
 <?php
 
+namespace Application;
+
 use Zend\Config\Config,
     Zend\EventManager\EventManager,
     Zend\Loader\ResourceAutoloader,
@@ -61,10 +63,29 @@ class Bootstrap extends BaseBootstrap
         $this->events->attach('dispatch', array($dispatcher, 'dispatch'));
     }
 
-    protected function getView()
+    public function initializeView($app)
+    {
+        $view = $this->getView($app);
+        $viewListener = new ViewListener($view);
+        $this->events->attachAggregate($viewListener);
+    }
+
+    protected function getView($app)
     {
         $view = new View();
+
+        // paths
+        $view->resolver()->addPaths(array(
+            __DIR__ . '/layouts/scripts',
+            __DIR__ . '/views/scripts',
+        ));
+
+        // helpers/plugins
         $view->plugin('doctype')->setDoctype('XHTML1_STRICT');
+        $view->getBroker()->getClassLoader()->registerPlugin('url', 'Application\View\Helper\Url');
+        $urlHelper = $view->plugin('url');
+        $urlHelper->setRouter($app->getRouter());
+
         return $view;
     }
 }
