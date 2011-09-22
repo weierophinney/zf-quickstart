@@ -28,6 +28,7 @@ class Bootstrap
     public function bootstrap(Application $app)
     {
         $app->setEventManager($this->events);
+        $this->configurePhpEnvironment();
         $this->initializeAutoloader($app);
         $this->initializeRouter($app);
         $this->initializeDispatcher($app);
@@ -35,10 +36,24 @@ class Bootstrap
         $this->initializeView($app);
     }
 
+    public function configurePhpEnvironment()
+    {
+        foreach ($this->config->phpSettings as $key => $value) {
+            if (is_scalar($value)) {
+                ini_set($key, $value);
+            }
+        }
+
+        if (isset($config->includePaths)) {
+            $path = implode(PATH_SEPARATOR, $config->includePaths);
+            set_include_path($path . PATH_SEPARATOR . get_include_path());
+        }
+    }
+
     public function initializeAutoloader()
     {
         $autoloader = new ResourceAutoloader(array(
-            'namespace' => 'Application',
+            'namespace' => $this->config->appnamespace,
             'basePath'  => APPLICATION_PATH,
         ));
         $autoloader->addResourceTypes(array(
@@ -92,6 +107,10 @@ class Bootstrap
 
     public function initializeDb($app)
     {
+        if (!isset($this->config->resources->db)) {
+            return;
+        }
+
         $db = Db::factory($this->config->resources->db);
         DbTable::setDefaultAdapter($db);
     }
@@ -101,10 +120,13 @@ class Bootstrap
         $view = new View();
 
         // paths
-        $view->resolver()->addPaths(array(
-            __DIR__ . '/layouts/scripts',
+        $paths = array(
             __DIR__ . '/views/scripts',
-        ));
+        );
+        if (isset($this->config->resources->layout->layoutPath)) {
+            array_unshift($paths, $this->config->resources->layout->layoutPath);
+        }
+        $view->resolver()->addPaths($paths);
 
         // helpers/plugins
         $view->plugin('doctype')->setDoctype('XHTML1_STRICT');
