@@ -1,6 +1,7 @@
 <?php
 $production = array(
-    'bootstrap_class' => 'site\Bootstrap',
+    'bootstrap_class'    => 'site\Bootstrap',
+    'display_exceptions' => false,
 
     'di' => array( 'instance' => array(
         'alias' => array(
@@ -54,12 +55,25 @@ $production = array(
                 ),
             ),
         ),
+        'trigger-error' => array(
+            'type' => 'Zend\Mvc\Router\Http\Literal',
+            'options' => array(
+                'route'    => '/trigger-error',
+                'defaults' => array(
+                    'controller' => 'index',
+                    'action'     => 'trigger-error',
+                ),
+            ),
+        ),
     ),
 );
 
 $staging     = $production;
 $testing     = $production;
 $development = $production;
+
+$testing['display_exceptions']     = true;
+$development['display_exceptions'] = true;
 
 $config = compact('production', 'staging', 'testing', 'development');
 return $config;

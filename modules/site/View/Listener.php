@@ -15,11 +15,23 @@ class Listener implements ListenerAggregate
     protected $layout;
     protected $listeners = array();
     protected $view;
+    protected $displayExceptions = false;
 
     public function __construct(Renderer $renderer, $layout = 'layout.phtml')
     {
         $this->view   = $renderer;
         $this->layout = $layout;
+    }
+
+    public function setDisplayExceptionsFlag($flag)
+    {
+        $this->displayExceptions = (bool) $flag;
+        return $this;
+    }
+
+    public function displayExceptions()
+    {
+        return $this->displayExceptions;
     }
 
     public function attach(EventCollection $events)
@@ -96,20 +108,32 @@ class Listener implements ListenerAggregate
 
     public function renderError(MvcEvent $e)
     {
-        $error   = $e->getError();
-        $app     = $e->getTarget();
+        $error    = $e->getError();
+        $app      = $e->getTarget();
+        $response = $e->getResponse();
+        if (!$response) {
+            $response = new Response();
+            $e->setResponse($response);
+        }
 
         switch ($error) {
             case Application::ERROR_CONTROLLER_NOT_FOUND:
+            case Application::ERROR_CONTROLLER_INVALID:
                 $vars = array(
                     'message' => 'Page not found.',
                 );
+                $response->setStatusCode(404);
                 break;
-            case Application::ERROR_CONTROLLER_INVALID:
+
+            case Application::ERROR_EXCEPTION:
             default:
+                $exception = $e->getParam('exception');
                 $vars = array(
-                    'message' => 'Unable to serve page; invalid controller.',
+                    'message'            => 'An error occurred during execution; please try again later.',
+                    'exception'          => $e->getParam('exception'),
+                    'display_exceptions' => $this->displayExceptions(),
                 );
+                $response->setStatusCode(500);
                 break;
         }
 

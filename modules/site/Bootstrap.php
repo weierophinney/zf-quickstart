@@ -76,6 +76,7 @@ class Bootstrap
         $url->setRouter($app->getRouter());
 
         $listener = new View\Listener($view, 'layouts/layout.phtml');
+        $listener->setDisplayExceptionsFlag($this->config->display_exceptions);
         $app->events()->attachAggregate($listener);
     }
 }

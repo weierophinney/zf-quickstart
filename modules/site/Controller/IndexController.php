@@ -10,4 +10,9 @@ class IndexController extends ActionController
     {
         return array('content' => 'IT WORKS!');
     }
+
+    public function triggerErrorAction()
+    {
+        throw new \Exception('Triggering an error to test error handling');
+    }
 }
