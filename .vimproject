@@ -121,6 +121,7 @@ quickstart=/home/matthew/git/zf-quickstart CD=. filter="*.php *.phtml *.ini *.sq
     IndexController.php
    }
    View=View {
+    Listener.php
     Helper=Helper {
      Url.php
     }
