@@ -29,20 +29,20 @@ class ErrorController extends ActionController
         }
 
         /**
-	 * FIXME Bootstrap injection
+         * FIXME Bootstrap injection
         // Log exception, if logger available
         if ($log = $this->getLog()) {
             $log->crit($message, $errors->exception);
         }*/
 
         /**
-	 * FIXME Get config param without ugly hack
+         * FIXME Get config param without ugly hack
         // conditionally display exceptions
         if ($this->getInvokeArg('displayExceptions') == true) {
             $this->view->vars()->exception = $errors->exception;
         }*/
 
-	return array(
+        return array(
             'message' => $message,
             'request' => $errors->request
         );

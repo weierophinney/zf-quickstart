@@ -75,24 +75,24 @@ class Dispatcher
         }
 
         if (!$found || !class_exists($class)) {
-	    // Prevent the infinite loop
+            // Prevent the infinite loop
             if (isset($error)) {
                 throw new \RuntimeException(sprintf(
                     'Loop for controller "%s"',
                      $class
                 ));
-	    }
+            }
 
             $error = new ArrayObject(array(), ArrayObject::ARRAY_AS_PROPS);
-	    $error->type = ErrorHandler::EXCEPTION_NO_CONTROLLER;
+            $error->type = ErrorHandler::EXCEPTION_NO_CONTROLLER;
             $error->request = clone $e->getRequest();
             $e->setError(404)
                 ->setController($controller)
                 ->setControllerClass($class)
                 ->setParam('error_handler', $error);
 
-	    // TODO Configure controller and action
-	    $baseClass = 'ErrorController';
+            // TODO Configure controller and action
+            $baseClass = 'ErrorController';
             $class = $module . '\\' . $baseClass;
             $routeMatch->setParam('controller', 'error');
             $routeMatch->setParam('action', 'error');
