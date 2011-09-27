@@ -5,7 +5,9 @@ namespace Zf1Compat;
 use Zend\Mvc\MvcEvent,
     Zend\Stdlib\Dispatchable,
     Zend\Stdlib\RequestDescription as Request,
-    Zend\Stdlib\ResponseDescription as Response;
+    Zend\Stdlib\ResponseDescription as Response,
+    Zend\Controller\Plugin\ErrorHandler,
+    ArrayObject;
 
 class Dispatcher
 {
@@ -73,10 +75,28 @@ class Dispatcher
         }
 
         if (!$found || !class_exists($class)) {
-            throw new \DomainException(sprintf(
-                'Unable to locate controller class "%s"',
-                $class
-            ));
+	    // Prevent the infinite loop
+            if (isset($error)) {
+                throw new \RuntimeException(sprintf(
+                    'Loop for controller "%s"',
+                     $class
+                ));
+	    }
+
+            $error = new ArrayObject(array(), ArrayObject::ARRAY_AS_PROPS);
+	    $error->type = ErrorHandler::EXCEPTION_NO_CONTROLLER;
+            $error->request = clone $e->getRequest();
+            $e->setError(404)
+                ->setController($controller)
+                ->setControllerClass($class)
+                ->setParam('error_handler', $error);
+
+	    // TODO Configure controller and action
+	    $baseClass = 'ErrorController';
+            $class = $module . '\\' . $baseClass;
+            $routeMatch->setParam('controller', 'error');
+            $routeMatch->setParam('action', 'error');
+            goto resolveByPath;
         }
 
         // Ready to dispatch!
