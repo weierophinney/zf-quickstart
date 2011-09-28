@@ -10,7 +10,7 @@ class ErrorController extends ActionController
 
     public function errorAction()
     {
-        $errors = $this->_getParam('error_handler');
+        $errors = $this->getEvent()->getParam('error_handler');
         
         switch ($errors->type) {
             case ErrorHandler::EXCEPTION_NO_ROUTE:
@@ -18,27 +18,34 @@ class ErrorController extends ActionController
             case ErrorHandler::EXCEPTION_NO_ACTION:
         
                 // 404 error -- controller or action not found
-                $this->getResponse()->setHttpResponseCode(404);
-                $this->view->vars()->message = 'Page not found';
+                $this->getResponse()->setStatusCode(404);
+                $message = 'Page not found';
                 break;
             default:
                 // application error
-                $this->getResponse()->setHttpResponseCode(500);
-                $this->view->vars()->message = 'Application error';
+                $this->getResponse()->setStatusCode(500);
+                $message = 'Application error';
                 break;
         }
-        
+
+        /**
+         * FIXME Bootstrap injection
         // Log exception, if logger available
         if ($log = $this->getLog()) {
-            $log->crit($this->view->vars()->message, $errors->exception);
-        }
-        
+            $log->crit($message, $errors->exception);
+        }*/
+
+        /**
+         * FIXME Get config param without ugly hack
         // conditionally display exceptions
         if ($this->getInvokeArg('displayExceptions') == true) {
             $this->view->vars()->exception = $errors->exception;
-        }
-        
-        $this->view->vars()->request   = $errors->request;
+        }*/
+
+        return array(
+            'message' => $message,
+            'request' => $errors->request
+        );
     }
 
     public function getLog()
