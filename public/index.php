@@ -28,7 +28,12 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require __DIR__ . '/../modules/ZendMvc/autoload_register.php';
 
 $config      = new Zend\Config\Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
-$bootstrap   = new Application\Bootstrap($config);
+$bootstrapClass = $config->bootstrap->class;
+// ZF1 don't use namespace for Bootstrap class in the default config
+if (!class_exists($bootstrapClass)) {
+    $bootstrapClass = $config->appnamespace . '\\' . $bootstrapClass;
+}
+$bootstrap   = new $bootstrapClass($config);
 $application = new Zend\Mvc\Application;
 $bootstrap->bootstrap($application);
 
