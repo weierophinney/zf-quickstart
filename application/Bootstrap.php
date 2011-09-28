@@ -73,6 +73,22 @@ class Bootstrap
                 'path'      => 'views/helpers',
                 'namespace' => 'View\Helper',
             ),
+            'view_filters' => array(
+                'path'      => 'views/filters',
+                'namespace' => 'View\Filter',
+            ),
+            'mappers' => array(
+                'path'      => 'models/mappers',
+                'namespace' => 'Model\Mapper',
+            ),
+            'services' => array(
+                'path'      => 'services',
+                'namespace' => 'Service',
+            ),
+            'plugins' => array(
+                'path'      => 'plugins',
+                'namespace' => 'Plugin',
+            ),
         ));
         $autoloader->register();
     }
