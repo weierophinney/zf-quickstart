@@ -14,9 +14,6 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 require_once 'Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
-    'Zend\Loader\ClassMapAutoloader' => array(
-        __DIR__ . '/../modules/ZendModule/autoload_classmap.php',
-    ),
     'Zend\Loader\StandardAutoloader' => array(),
 ));
 

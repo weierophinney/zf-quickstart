@@ -4,8 +4,6 @@ return new Zend\Config\Config(array(
         realpath(__DIR__ . '/../modules'),
     ),
     'modules' => array(
-        'ZendModule',
-        'ZendMvc',
         'site',
         'Guestbook',
     ),
