@@ -25,7 +25,6 @@ Zend\Loader\AutoloaderFactory::factory(array(
         ),
     ),
 ));
-require __DIR__ . '/../modules/ZendMvc/autoload_register.php';
 
 $config      = new Zend\Config\Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
 $bootstrapClass = $config->bootstrap->class;
