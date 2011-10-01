@@ -1,13 +1,11 @@
-<p><a href="<?php echo $this->plugin('url')->direct(
-    array(
-        'controller' => 'guestbook',
-        'action'     => 'sign'
-    ),
-    array('name' => 'default')) ?>">Sign Our Guestbook</a></p>
+<p><a href="<?php echo $this->url(array(
+    'controller' => 'guestbook',
+    'action'     => 'sign',
+), array('name' => 'default')) ?>">Sign Our Guestbook</a></p>
 
 Guestbook Entries: <br />
 <dl>
-    <?php foreach ($this->vars('entries') as $entry): ?>
+    <?php foreach ($this->entries as $entry): ?>
     <dt><?php echo $this->vars()->escape($entry->email) ?></dt>
     <dd><?php echo $this->vars()->escape($entry->comment) ?></dd>
     <?php endforeach ?>
