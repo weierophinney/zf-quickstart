@@ -1,7 +1,7 @@
 Please use the form below to sign our guestbook!
 
 <?php
-$form = $this->vars('form');
-$form->setAction($this->plugin('url')->direct(array('controller' => 'guestbook', 'action' => 'sign'), array('name' => 'default')))
+$form = $this->form;
+$form->setAction($this->url(array('controller' => 'guestbook', 'action' => 'sign'), array('name' => 'default')))
      ->setView($this);
 echo $form;
