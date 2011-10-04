@@ -5,8 +5,7 @@ namespace Guestbook\Controller;
 use Guestbook\Form\Guestbook as GuestbookForm,
     Guestbook\Model\Guestbook,
     Guestbook\Model\GuestbookMapper,
-    Zend\Mvc\Controller\ActionController,
-    Zend\Mvc\Router\RouteStack;
+    Zend\Mvc\Controller\ActionController;
 
 class GuestbookController extends ActionController
 {
@@ -27,14 +26,10 @@ class GuestbookController extends ActionController
                 $comment = new Guestbook($form->getValues());
                 $this->mapper->save($comment);
 
-                $redirect = $this->router->assemble(
-                    array('controller' => 'guestbook', 'action' => 'index'), 
-                    array('name' => 'default')
-                );
-
-                $this->response->setStatusCode(302);
-                $this->response->headers()->addHeaderLine('Location', $redirect);
-                return $this->response;
+                return $this->redirect()->toRoute('default', array(
+                    'controller' => 'guestbook',
+                    'action'     => 'index',
+                ));
             }
         }
 
@@ -44,12 +39,6 @@ class GuestbookController extends ActionController
     public function setMapper(GuestbookMapper $mapper)
     {
         $this->mapper = $mapper;
-        return $this;
-    }
-
-    public function setRouter(RouteStack $router)
-    {
-        $this->router = $router;
         return $this;
     }
 }
