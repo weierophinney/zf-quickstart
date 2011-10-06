@@ -5,8 +5,7 @@ namespace site;
 use Zend\Config\Config,
     Zend\Di\Configuration,
     Zend\Di\Definition,
-    Zend\Di\Definition\Builder,
-    Zend\Di\DependencyInjector,
+    Zend\Di\Di,
     Zend\EventManager\StaticEventManager,
     Zend\Stdlib\ResponseDescription as Response,
     Zend\View\Variables as ViewVariables,
@@ -34,11 +33,9 @@ class Bootstrap
          * Instantiate and configure a DependencyInjector instance, or 
          * a ServiceLocator, and return it.
          */
-        $definition = new Definition\AggregateDefinition;
+        $di = new Di();
+        $definition = $di->definitions();
         $definition->addDefinition(new Definition\RuntimeDefinition);
-
-        $di = new DependencyInjector();
-        $di->setDefinition($definition);
 
         $config = new Configuration($this->config->di);
         $config->configure($di);
