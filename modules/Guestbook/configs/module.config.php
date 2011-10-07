@@ -30,13 +30,11 @@ $production = array(
             'config' => array('dbname' => __DIR__ . '/../data/guestbook.db'),
         )),
 
-        'Zend\View\PhpRenderer' => array('methods' => array(
-            'setResolver' => array(
-                'resolver' => 'Zend\View\TemplatePathStack',
-                'options' => array(
-                    'script_paths' => array(
-                        'guestbook' => __DIR__ . '/../views',
-                    ),
+        'Zend\View\PhpRenderer' => array('parameters' => array(
+            'resolver' => 'Zend\View\TemplatePathStack',
+            'options' => array(
+                'script_paths' => array(
+                    'guestbook' => __DIR__ . '/../views',
                 ),
             ),
         )),

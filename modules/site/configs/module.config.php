@@ -18,17 +18,13 @@ $production = array(
         'Zend\View\HelperBroker' => array('parameters' => array(
             'loader' => 'Zend\View\HelperLoader',
         )),
-        'Zend\View\PhpRenderer' => array('methods' => array(
-            'setResolver' => array(
-                'resolver' => 'Zend\View\TemplatePathStack',
-                'options' => array(
-                    'script_paths' => array(
-                        'site' => __DIR__ . '/../views',
-                    ),
+        'Zend\View\PhpRenderer' => array('parameters' => array(
+            'resolver' => 'Zend\View\TemplatePathStack',
+            'options' => array(
+                'script_paths' => array(
+                    'site' => __DIR__ . '/../views',
                 ),
             ),
-        ),
-        'parameters' => array( 
             'broker' => 'Zend\View\HelperBroker',
         )),
     )),

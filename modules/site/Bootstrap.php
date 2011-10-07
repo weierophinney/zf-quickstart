@@ -33,9 +33,13 @@ class Bootstrap
          * Instantiate and configure a DependencyInjector instance, or 
          * a ServiceLocator, and return it.
          */
-        $di = new Di();
+        $runtime = new Definition\RuntimeDefinition();
+        $runtime->getIntrospectionStrategy()->setUseAnnotations(false);
+
+        $di         = new Di();
         $definition = $di->definitions();
-        $definition->addDefinition(new Definition\RuntimeDefinition);
+        $definition->addDefinition($runtime);
+        $di->instanceManager()->addTypePreference('Zend\Di\Locator', $di);
 
         $config = new Configuration($this->config->di);
         $config->configure($di);
