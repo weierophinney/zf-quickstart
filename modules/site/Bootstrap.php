@@ -8,7 +8,8 @@ use Zend\Config\Config,
     Zend\EventManager\StaticEventManager,
     Zend\Stdlib\ResponseDescription as Response,
     Zend\View\Variables as ViewVariables,
-    Zend\Mvc\Application;
+    Zend\Mvc\Application,
+    Zend\Mvc\Router\Http\TreeRouteStack as Router;
 
 class Bootstrap
 {
@@ -48,8 +49,8 @@ class Bootstrap
          * Pull the routing table from configuration, and pass it to the
          * router composed in the Application instance.
          */
-        $router = $app->getLocator()->get('Zend\Mvc\Router\SimpleRouteStack');
-        $router->addRoutes($this->config->routes->toArray());
+        $router = new Router();
+        $router->addRoutes($this->config->routes);
         $app->setRouter($router);
     }
 
